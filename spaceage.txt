@@ -1,6 +1,6 @@
 "spaceage"
 {
-	"base"		"base"
-	"title"		"SpaceAge"
+	"base"			"base"
+	"title"			"SpaceAge"
 	"menusystem"	"1"
 }
