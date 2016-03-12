@@ -73,6 +73,7 @@ function GM:CreatePlanets()
 
 		planet:SetPlanetName(planetValues.name)
 		planet:SetPlanetRadius(planetValues.radius)
+		planet:SetPlanetGravity(planetValues.gravity)
 
 		-- TODO: set additional planet values
 

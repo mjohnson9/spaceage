@@ -25,12 +25,23 @@ function ENT:SetPlanetRadius(radius)
 	self:SetCollisionBounds(Vector(negRadius, negRadius, negRadius), Vector(radius, radius, radius))
 end
 
+function ENT:SetPlanetGravity(gravity)
+	if self.planetInfo == nil then
+		self.planetInfo = {}
+	end
+	self.planetInfo.gravity = gravity
+end
+
 function ENT:StartTouch(otherEnt)
 	if not otherEnt:IsPlayer() then
 		return
 	end
 
-	-- TODO: inform player that it is in atmosphere
+	print(otherEnt:GetName() .. " has entered the atmosphere of " .. self.planetInfo.name)
+
+	otherEnt:SetGravity(self.planetInfo.gravity)
+
+	-- TODO: handle edge cases
 end
 
 function ENT:EndTouch(otherEnt)
@@ -38,5 +49,9 @@ function ENT:EndTouch(otherEnt)
 		return
 	end
 
-	-- TODO: inform player that it is no longer in atmosphere
+	print(otherEnt:GetName() .. " has exited the atmosphere of " .. self.planetInfo.name)
+
+	otherEnt:SetGravity(0.00001)
+
+	-- TODO: handle edge cases
 end
