@@ -22,6 +22,8 @@ local function getPlanetV2(logicKV)
 	return {
 		name = tostring(logicKV["Case13"]),
 
+		priority = 5120/tonumber(logicKV["Case02"]),
+
 		radius = tonumber(logicKV["Case02"]),
 		gravity = tonumber(logicKV["Case03"]),
 		atmosphere = math.Clamp(tonumber(logicKV["Case04"]), 0, 1),
@@ -78,6 +80,7 @@ function GM:CreatePlanets()
 		planet:SetPlanetName(planetValues.name)
 		planet:SetPlanetRadius(planetValues.radius)
 		planet:SetPlanetGravity(planetValues.gravity)
+		planet:SetPlanetPriority(planetValues.priority)
 
 		-- TODO: set additional planet values
 

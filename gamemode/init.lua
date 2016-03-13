@@ -19,6 +19,12 @@ function GM:InitPostEntity()
 	self:CreatePlanets()
 end
 
+function GM:PlayerInitialSpawn(ply)
+	self.BaseClass.PlayerInitialSpawn(self, ply)
+
+	ply:InitializeSpaceAge()
+end
+
 function GM:PlayerSpawn(ply)
 	self.BaseClass.PlayerSpawn(self, ply)
 
