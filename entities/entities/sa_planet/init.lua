@@ -11,8 +11,10 @@ function ENT:Initialize()
 	self:SetTrigger(true)
 
 	self.planetInfo = {
-		priority = 1,
 		name = "",
+
+		gravity = 1,
+		priority = 1,
 		radius = 1,
 	}
 end
