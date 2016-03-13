@@ -1,3 +1,6 @@
+-- Copyright (C) Charles Leasure, Mark Dietzer, and Michael Johnson d.b.a SpaceAge - All Rights Reserved
+-- See LICENSE file for more information.
+
 local SB_PLANET1_HABITAT = bit.lshift(1, 1)
 local SB_PLANET1_UNSTABLE = bit.lshift(1, 2)
 local SB_PLANET1_SUNBURN = bit.lshift(1, 3)
