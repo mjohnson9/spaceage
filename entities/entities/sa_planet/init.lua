@@ -7,18 +7,17 @@ function ENT:Initialize()
 	self.BaseClass.Initialize(self)
 
 	self:SetSolid(SOLID_BBOX)
-	self:SetCollisionBounds(Vector(0, 0, 0), Vector(0, 0, 0))
+	self:SetCollisionBounds(Vector(-1, -1, -1), Vector(1, 1, 1))
 	self:SetTrigger(true)
 
-	if self.planetInfo == nil then
-		self.planetInfo = {}
-	end
+	self.planetInfo = {
+		priority = 1,
+		name = "",
+		radius = 1,
+	}
 end
 
 function ENT:SetPlanetName(name)
-	if self.planetInfo == nil then
-		self.planetInfo = {}
-	end
 	self.planetInfo.name = name
 end
 
@@ -27,9 +26,6 @@ function ENT:GetPlanetName()
 end
 
 function ENT:SetPlanetRadius(radius)
-	if self.planetInfo == nil then
-		self.planetInfo = {}
-	end
 	self.planetInfo.radius = radius
 
 	local negRadius = -radius
@@ -41,14 +37,19 @@ function ENT:GetPlanetRadius()
 end
 
 function ENT:SetPlanetGravity(gravity)
-	if self.planetInfo == nil then
-		self.planetInfo = {}
-	end
 	self.planetInfo.gravity = gravity
 end
 
 function ENT:GetPlanetGravity()
 	return self.planetInfo.gravity
+end
+
+function ENT:SetPlanetPriority(priority)
+	self.planetInfo.priority = priority
+end
+
+function ENT:GetPlanetPriority()
+	return self.planetInfo.priority
 end
 
 function ENT:StartTouch(otherEnt)

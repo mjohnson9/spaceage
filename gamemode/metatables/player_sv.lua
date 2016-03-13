@@ -6,16 +6,41 @@ AddCSLuaFile("player_sh.lua")
 
 include("player_sh.lua")
 
+include("plifo.lua")
+
 local PLAYER = FindMetaTable("Player")
 
-function PLAYER:EnteredPlanet(planet)
-	self:SetGravity(planet:GetPlanetGravity())
+local function planetCompare(planet1, planet2)
+	if planet1:GetPlanetPriority() < planet2:GetPlanetPriority() then
+		return true
+	end
 
-	self:SetAreaName(planet:GetPlanetName())
+	return planet1:EntIndex() < planet2:EntIndex()
+end
+
+function PLAYER:InitializeSpaceAge()
+	self.planets = plifo.new(planetCompare)
+end
+
+function PLAYER:EnteredPlanet(planet)
+	self.planets:insert(planet)
+
+	return self:ApplyPlanet(self.planets[#self.planets])
 end
 
 function PLAYER:ExitedPlanet(planet)
-	self:SetGravity(0.00001)
+	self.planets:remove(planet)
 
-	self:SetAreaName("Space")
+	return self:ApplyPlanet(self.planets[#self.planets])
+end
+
+function PLAYER:ApplyPlanet(planet)
+	if planet == nil then
+		self:SetGravity(0.00001)
+		self:SetAreaName("Space")
+		return
+	end
+
+	self:SetGravity(planet:GetPlanetGravity())
+	self:SetAreaName(planet:GetPlanetName())
 end
