@@ -20,7 +20,9 @@ end
 function GM:OnEntityCreated(ent)
 	self.BaseClass.OnEntityCreated(ent)
 
-	if not ent:IsPlayer() then
-		return
+	if ent:IsPlayer() then
+		-- hotfix for https://github.com/Facepunch/garrysmod-issues/issues/892
+		ent:InstallDataTable()
+		player_manager.RunClass(ent, "SetupDataTables")
 	end
 end
