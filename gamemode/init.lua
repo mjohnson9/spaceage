@@ -11,6 +11,8 @@ include("shared.lua")
 include("sv_planets.lua")
 
 function GM:InitPostEntity()
+	self.BaseClass.InitPostEntity(self)
+
 	self:CreatePlanets()
 end
 
