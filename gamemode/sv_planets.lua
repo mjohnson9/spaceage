@@ -3,6 +3,7 @@ local SB_PLANET1_UNSTABLE = bit.lshift(1, 2)
 local SB_PLANET1_SUNBURN = bit.lshift(1, 3)
 
 local function getPlanetV1(logicKV)
+	-- TODO: add support for version 1 planets
 	error("Version 1 planets are not yet supported")
 end
 
