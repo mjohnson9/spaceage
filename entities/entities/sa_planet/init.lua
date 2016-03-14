@@ -13,9 +13,12 @@ function ENT:Initialize()
 	self.planetInfo = {
 		name = "",
 
+		cube = false,
+
 		gravity = 1,
 		priority = 1,
 		radius = 1,
+		radiusSqr = 1,
 	}
 end
 
@@ -29,6 +32,7 @@ end
 
 function ENT:SetPlanetRadius(radius)
 	self.planetInfo.radius = radius
+	self.planetInfo.radiusSqr = radius*radius
 
 	local negRadius = -radius
 	self:SetCollisionBounds(Vector(negRadius, negRadius, negRadius), Vector(radius, radius, radius))
@@ -54,22 +58,35 @@ function ENT:GetPlanetPriority()
 	return self.planetInfo.priority
 end
 
-function ENT:StartTouch(otherEnt)
-	if not otherEnt:IsPlayer() then
-		return
+function ENT:PassesTriggerFilters(otherEnt)
+	-- TODO: Investigate why this is never called
+	-- Wiki says it's broken (http://wiki.garrysmod.com/page/ENTITY/PassesTriggerFilters), but why?
+
+	if self.planetInfo.cube then
+		return true
 	end
 
-	print(otherEnt:GetName() .. " has entered the atmosphere of " .. self.planetInfo.name)
+	return self:GetPos():DistToSqr(otherEnt:GetPos()) <= self.planetInfo.radiusSqr
+end
 
+function ENT:StartTouch(otherEnt)
 	otherEnt:EnteredPlanet(self)
 end
 
 function ENT:EndTouch(otherEnt)
-	if not otherEnt:IsPlayer() then
-		return
-	end
-
-	print(otherEnt:GetName() .. " has exited the atmosphere of " .. self.planetInfo.name)
-
 	otherEnt:ExitedPlanet(self)
+end
+
+-- Prevent player interaction
+
+function ENT:CanTool()
+	return false
+end
+
+function ENT:GravGunPunt()
+	return false
+end
+
+function ENT:GravGunPickupAllowed()
+	return false
 end
