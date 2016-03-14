@@ -7,10 +7,16 @@ include("../utilities/plifo.lua")
 local ENTITY = FindMetaTable("Entity")
 
 function ENTITY:InitializeSpaceAge()
-	self.planets = plifo.new(planet_util.compare)
+	if self.planets == nil then
+		self.planets = plifo.new(planet_util.compare)
+	end
 end
 
 function ENTITY:EnteredPlanet(planet)
+	if self.planets == nil then
+		self:InitializeSpaceAge()
+	end
+
 	self.planets:insert(planet)
 
 	return self:ApplyPlanet(self.planets[#self.planets])
