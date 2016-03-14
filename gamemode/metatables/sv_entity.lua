@@ -2,13 +2,13 @@
 -- See LICENSE file for more information.
 
 include("../utilities/planet_util.lua")
-include("../utilities/plifo.lua")
+include("../utilities/sorted_set.lua")
 
 local ENTITY = FindMetaTable("Entity")
 
 function ENTITY:InitializeSpaceAge()
 	if self.planets == nil then
-		self.planets = plifo.new(planet_util.compare)
+		self.planets = sorted_set.new(planet_util.compare)
 	end
 end
 

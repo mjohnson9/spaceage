@@ -2,12 +2,12 @@
 -- See LICENSE file for more information.
 
 include("../utilities/planet_util.lua")
-include("../utilities/plifo.lua")
+include("../utilities/sorted_set.lua")
 
 local PLAYER = FindMetaTable("Player")
 
 function PLAYER:InitializeSpaceAge()
-	self.planets = plifo.new(planet_util.compare)
+	self.planets = sorted_set.new(planet_util.compare)
 end
 
 -- this hook is to be called after DataTables are initialized
