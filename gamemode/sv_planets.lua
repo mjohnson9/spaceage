@@ -85,6 +85,5 @@ function GM:CreatePlanets()
 		-- TODO: set additional planet values
 
 		print("Created planet for " .. tostring(planetValues.name))
-		PrintTable(planetValues)
 	end
 end

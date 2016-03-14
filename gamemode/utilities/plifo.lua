@@ -34,12 +34,17 @@ function mt:contains(item)
 end
 
 function mt:remove(item)
-	local i = 1
 	for i in ipairs(self) do
 		if self[i] == item then
 			tableRemove(self, i)
 			return
 		end
+	end
+end
+
+function mt:clear()
+	for i = #self, 1, -1 do
+		tableRemove(self, i)
 	end
 end
 

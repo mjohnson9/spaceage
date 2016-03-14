@@ -3,3 +3,6 @@
 
 ENT.Base = "base_brush"
 ENT.Type = "brush"
+
+-- Prevent physgun interaction
+ENT.PhysgunDisabled = true
