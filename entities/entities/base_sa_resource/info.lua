@@ -10,3 +10,5 @@ ENT.Purpose = "Base entity for resource producing or consuming SpaceAge entities
 ENT.Instructions = ""
 
 ENT.Spawnable = false
+
+ENT.ResourceLinkable = true

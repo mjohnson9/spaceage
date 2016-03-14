@@ -6,6 +6,14 @@ function ENT:Initialize()
 		self:ServerInitialize()
 	end
 
+	if CLIENT then
+		self:ClientInitialize()
+	end
+
 	local phys = self:GetPhysicsObject()
 	if IsValid(phys) then phys:Wake() end
+end
+
+function ENT:SetupDataTables()
+	self:NetworkVar("Int", 0, "NetworkID")
 end

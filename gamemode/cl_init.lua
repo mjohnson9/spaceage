@@ -5,6 +5,7 @@
 include("shared.lua")
 
 -- misc includes
+include("cl_3d2d_derma.lua")
 include("cl_hud.lua")
 
 function GM:Initialize()
