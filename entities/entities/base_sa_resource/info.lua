@@ -2,7 +2,7 @@
 -- See LICENSE file for more information.
 
 ENT.Type = "anim"
-ENT.Base = "base_gmodentity"
+ENT.Base = "base_anim"
 
 ENT.Category = "SpaceAge"
 ENT.PrintName = "Base SpaceAge Resource"
