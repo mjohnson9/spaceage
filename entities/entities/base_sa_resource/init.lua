@@ -17,29 +17,30 @@ function ENT:IsInNetwork(target)
 	return self.resourceNetwork ~= nil and self.resourceNetwork == target.resourceNetwork
 end
 
-local function resourceEntityCompare(ent1, ent2)
-	return ent1:EntIndex() < ent2:EntIndex()
-end
-
-local function newNetwork()
-	local network = {
-		members = sorted_set.new(resourceEntityCompare)
-	}
-
-	-- TODO: Replace this ugly hack with some better way of generating network IDs
-	network.id = tonumber(string.sub(tostring(network), 7)) -- use the network's memory location to generate its ID
-
-	return network
-end
-
 function ENT:ResourceLink(target)
 	if self.resourceNetwork == nil and target.resourceNetwork == nil then
-		-- neither resource has a network, create a new network
+		-- neither resource has a network, create a new network and join them
 
-		local network = newNetwork()
+		local network = resource_network.new()
 
 		self:JoinNetwork(network)
 		target:JoinNetwork(network)
+
+		return
+	end
+
+	if self.resourceNetwork == nil and target.resourceNetwork ~= nil then
+		-- the target has a network and we don't, just join
+
+		self:JoinNetwork(target.resourceNetwork)
+
+		return
+	end
+
+	if self.resourceNetwork ~= nil and target.resourceNetwork == nil then
+		-- we have a network and the target doesn't, just join them
+
+		target:JoinNetwork(self.resourceNetwork)
 
 		return
 	end
@@ -48,8 +49,13 @@ function ENT:ResourceLink(target)
 end
 
 function ENT:JoinNetwork(network)
+	if self.resourceNetwork == network then
+		-- we're already in this network
+		return
+	end
+
 	if self.resourceNetwork ~= nil then
-		self.resourceNetwork.members:remove(self)
+		self.resourceNetwork:removeResource(self)
 	end
 
 	if network == nil then
@@ -59,7 +65,7 @@ function ENT:JoinNetwork(network)
 	end
 
 	self.resourceNetwork = network
-	self.resourceNetwork.members:insert(self)
+	self.resourceNetwork:addResource(self)
 
 	self:SetNetworkID(self.resourceNetwork.id)
 end
