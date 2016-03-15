@@ -9,6 +9,14 @@ function ENT:ServerInitialize()
 	self:PhysicsInit(SOLID_VPHYSICS)
 end
 
+function ENT:GenerateResource(name, amtPerSec)
+	if self.resourceNetwork == nil then
+		return
+	end
+	local amt = amtPerSec * self.thinkTime
+	self.resourceNetwork:insertResource(name, amt)
+end
+
 function ENT:GetResourceNetwork()
 	return self.resourceNetwork
 end

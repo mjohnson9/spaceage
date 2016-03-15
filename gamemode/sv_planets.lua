@@ -22,11 +22,13 @@ local function getPlanetV2(logicKV)
 	return {
 		name = tostring(logicKV["Case13"]),
 
-		priority = 5120/tonumber(logicKV["Case02"]),
+		priority = 5120 / tonumber(logicKV["Case02"]),
 
 		radius = tonumber(logicKV["Case02"]),
 		gravity = tonumber(logicKV["Case03"]),
 		atmosphere = math.Clamp(tonumber(logicKV["Case04"]), 0, 1),
+
+		shape = "sphere",
 
 		flags = {
 			unstable = bit.band(SB_PLANET2_UNSTABLE, flags) == SB_PLANET2_UNSTABLE,
@@ -47,7 +49,7 @@ local function getPlanetValues(logicCase)
 	elseif planetVersion == "planet2" then
 		planetValues = getPlanetV2(kv)
 	else
-		print("WARNING: Unknown planet type: " .. tostring(planetVersion))
+		ErrorNoHalt("WARNING: Unknown planet type: " .. tostring(planetVersion).."\n")
 		return nil
 	end
 
@@ -75,14 +77,13 @@ function GM:CreatePlanets()
 		planet:SetPos(planetValues.position)
 		planet:SetAngles(planetValues.angle)
 
-		planet:Spawn()
-
 		planet:SetPlanetName(planetValues.name)
 		planet:SetPlanetRadius(planetValues.radius)
 		planet:SetPlanetGravity(planetValues.gravity)
 		planet:SetPlanetPriority(planetValues.priority)
+		planet:SetPlanetShape(planetValues.shape)
 
-		-- TODO: set additional planet values
+		planet:Spawn()
 
 		print("Created planet for " .. tostring(planetValues.name))
 	end

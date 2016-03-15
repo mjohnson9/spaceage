@@ -67,6 +67,10 @@ local function defaultCompare(a1, a2)
 	return a1 < a2
 end
 
+---
+-- Creates a new sorted set
+-- @param compareFunc a comparison function of the signature function(a, b) -- it should return true whenever a is less than b
+-- @return a sorted set
 function new(compareFunc)
 	if compareFunc == nil then
 		compareFunc = defaultCompare

@@ -26,7 +26,8 @@ function new()
 	local network = {
 		id = networkID,
 
-		members = sortedSetNew(resourceEntityCompare)
+		members = sortedSetNew(resourceEntityCompare),
+		resources = {},
 	}
 
 	networkID = networkID + 1
