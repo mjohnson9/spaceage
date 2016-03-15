@@ -31,6 +31,9 @@ function PLAYER:ExitedPlanet(planet)
 	return self:ApplyPlanet(self.planets[#self.planets])
 end
 
+-- if a player's gravity is set to 0, the engine converts it to 1
+local PLAYER_NOGRAVITY = 0.00001
+
 function PLAYER:ApplyPlanet(planet)
 	if not self.SetAreaName then
 		-- the player just joined and hasn't fully initialized yet
@@ -40,11 +43,16 @@ function PLAYER:ApplyPlanet(planet)
 	end
 
 	if planet == nil then
-		self:SetGravity(0.00001)
+		self:SetGravity(PLAYER_NOGRAVITY)
 		self:SetAreaName("Space")
 		return
 	end
 
-	self:SetGravity(planet:GetPlanetGravity())
+	local gravity = planet:GetPlanetGravity()
+	if gravity == 0 then
+		self:SetGravity(PLAYER_NOGRAVITY)
+	else
+		self:SetGravity(gravity)
+	end
 	self:SetAreaName(planet:GetPlanetName())
 end

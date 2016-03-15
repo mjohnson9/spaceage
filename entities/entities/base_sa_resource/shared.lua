@@ -1,3 +1,5 @@
+local CurTime = CurTime
+
 function ENT:Initialize()
 	self:SetMoveType(MOVETYPE_VPHYSICS)
 	self:SetSolid(SOLID_VPHYSICS)
@@ -12,6 +14,18 @@ function ENT:Initialize()
 
 	local phys = self:GetPhysicsObject()
 	if IsValid(phys) then phys:Wake() end
+
+	self.lastThinkAt = CurTime()
+	self.thinkTime = 0
+end
+
+---
+-- Calculates the entity's thinkTime. thinkTime can be used similarly to
+-- FrameTime to easily achieve a desired rate of change.
+function ENT:CalcThinkTime()
+	local t = CurTime()
+	self.thinkTime = t - self.lastThinkAt
+	self.lastThinkAt = t
 end
 
 function ENT:SetupDataTables()

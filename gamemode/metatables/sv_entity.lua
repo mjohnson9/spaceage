@@ -28,6 +28,9 @@ function ENTITY:ExitedPlanet(planet)
 	return self:ApplyPlanet(self.planets[#self.planets])
 end
 
+-- if an entity's gravity is set to 0, the engine converts it to 1
+local ENTITY_NOGRAVITY = 0.00001
+
 function ENTITY:ApplyPlanet(planet)
 	if planet == nil then
 		local phys = self:GetPhysicsObject()
@@ -36,7 +39,7 @@ function ENTITY:ApplyPlanet(planet)
 			phys:EnableGravity(false)
 		end
 
-		self:SetGravity(0.00001)
+		self:SetGravity(ENTITY_NOGRAVITY)
 		return
 	end
 
@@ -46,5 +49,10 @@ function ENTITY:ApplyPlanet(planet)
 		phys:EnableGravity(true)
 	end
 
-	self:SetGravity(planet:GetPlanetGravity())
+	local gravity = planet:GetPlanetGravity()
+	if gravity == 0 then
+		self:SetGravity(ENTITY_NOGRAVITY)
+	else
+		self:SetGravity(gravity)
+	end
 end

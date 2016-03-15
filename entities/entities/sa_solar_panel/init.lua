@@ -4,3 +4,7 @@ AddCSLuaFile("shared.lua")
 
 include("info.lua")
 include("shared.lua")
+
+function ENT:Think()
+	self:CalcThinkTime()
+end

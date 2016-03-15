@@ -6,23 +6,41 @@ include("info.lua")
 function ENT:Initialize()
 	self.BaseClass.Initialize(self)
 
+	local radius = self.planetInfo.radius
+	local negRadius = -radius
+
+	local mins = Vector(negRadius, negRadius, negRadius)
+	local maxs = Vector(radius, radius, radius)
+	if not self.planetInfo.cube then
+		--print("Created cube of radius " .. tostring(radius))
+		--self:PhysicsInitBox(mins, maxs)
+		ErrorNoHalt("Spherical planets are presently represented by cubes due to limitations in Garry's Mod.\n")
+	--else
+		--self:PhysicsInitSphere(radius, "default_silent")
+	end
+
+	self:SetCollisionBounds(mins, maxs)
 	self:SetSolid(SOLID_BBOX)
-	self:SetCollisionBounds(Vector(-1, -1, -1), Vector(1, 1, 1))
+
 	self:SetTrigger(true)
+end
 
-	self.planetInfo = {
-		name = "",
+function ENT:CheckPlanetInfo()
+	if self.planetInfo == nil then
+		self.planetInfo = {
+			name = "",
 
-		cube = false,
+			cube = false,
 
-		gravity = 1,
-		priority = 1,
-		radius = 1,
-		radiusSqr = 1,
-	}
+			gravity = 1,
+			priority = 1,
+			radius = 1,
+		}
+	end
 end
 
 function ENT:SetPlanetName(name)
+	self:CheckPlanetInfo()
 	self.planetInfo.name = name
 end
 
@@ -30,12 +48,24 @@ function ENT:GetPlanetName()
 	return self.planetInfo.name
 end
 
-function ENT:SetPlanetRadius(radius)
-	self.planetInfo.radius = radius
-	self.planetInfo.radiusSqr = radius*radius
+function ENT:SetPlanetShape(shape)
+	self:CheckPlanetInfo()
 
-	local negRadius = -radius
-	self:SetCollisionBounds(Vector(negRadius, negRadius, negRadius), Vector(radius, radius, radius))
+	if shape == "sphere" then
+		self.planetInfo.cube = false
+	elseif shape == "cube" then
+		self.planetInfo.cube = true
+	else
+		error("unknown planet shape: " .. tostring(shape))
+	end
+end
+
+function ENT:SetPlanetRadius(radius)
+	self:CheckPlanetInfo()
+	self.planetInfo.radius = radius
+
+	--local negRadius = -radius
+	--self:SetCollisionBounds(Vector(negRadius, negRadius, negRadius), Vector(radius, radius, radius))
 end
 
 function ENT:GetPlanetRadius()
@@ -43,6 +73,7 @@ function ENT:GetPlanetRadius()
 end
 
 function ENT:SetPlanetGravity(gravity)
+	self:CheckPlanetInfo()
 	self.planetInfo.gravity = gravity
 end
 
@@ -51,22 +82,12 @@ function ENT:GetPlanetGravity()
 end
 
 function ENT:SetPlanetPriority(priority)
+	self:CheckPlanetInfo()
 	self.planetInfo.priority = priority
 end
 
 function ENT:GetPlanetPriority()
 	return self.planetInfo.priority
-end
-
-function ENT:PassesTriggerFilters(otherEnt)
-	-- TODO: Investigate why this is never called
-	-- Wiki says it's broken (http://wiki.garrysmod.com/page/ENTITY/PassesTriggerFilters), but why?
-
-	if self.planetInfo.cube then
-		return true
-	end
-
-	return self:GetPos():DistToSqr(otherEnt:GetPos()) <= self.planetInfo.radiusSqr
 end
 
 function ENT:StartTouch(otherEnt)
