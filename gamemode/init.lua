@@ -45,6 +45,8 @@ end
 
 -- Called after the map is cleaned up.
 function GM:PostCleanupMap()
+	self.BaseClass.PostCleanupMap(self)
+
 	-- Reset everyone's planet list
 	for _, ply in ipairs(player.GetAll()) do
 		ply.planets:clear()
