@@ -9,7 +9,7 @@ local mt = {}
 mt.__index = mt
 
 local function searchValue(t, value, compareFunc)
-	--  Initialise numbers
+	--  Initialize numbers
 	local first, last, middle, add = 1, #t, 1, 0
 	-- Get insert position
 	while first <= last do
