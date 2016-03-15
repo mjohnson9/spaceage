@@ -18,8 +18,8 @@ function GM:HUDPaint()
 
 	-- Local Variables
 	local playerArea   = self.LocalPlayer:GetAreaName()
-	local playerHealth = self.LocalPlayer:Health()
-	local playerEnergy = self.LocalPlayer:Armor()
+	local playerHealth = math.Clamp(self.LocalPlayer:Health(), 0, 100)
+	local playerEnergy = math.Clamp(self.LocalPlayer:Armor(), 0, 100)
 	local playerOxygen = 60
 	local playerCoolant = 20
 	local screenHeight = ScrH()
