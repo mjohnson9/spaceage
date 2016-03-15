@@ -13,6 +13,7 @@ include("shared.lua")
 
 -- misc includes
 include("sv_planets.lua")
+include("utilities/resource_network.lua")
 
 function GM:InitPostEntity()
 	self.BaseClass.InitPostEntity(self)
