@@ -18,8 +18,8 @@ function GM:HUDPaint()
 
 	-- Local Variables
 	local playerArea   = self.LocalPlayer:GetAreaName()
-	local playerHealth = math.Clamp(self.LocalPlayer:Health(), 0, 100)
-	local playerEnergy = math.Clamp(self.LocalPlayer:Armor(), 0, 100)
+	local playerHealth = math.Clamp(self.LocalPlayer:Health(), 0, 999)
+	local playerEnergy = math.Clamp(self.LocalPlayer:Armor(), 0, 999)
 	local playerOxygen = 60
 	local playerCoolant = 20
 	local screenHeight = ScrH()
@@ -68,7 +68,10 @@ function GM:HUDPaint()
 end
 
 function GM:HUDShouldDraw(name)
-	if	name == "CHudHealth" or name == "CHudBattery" or name == "CHudAmmo" or name == "CHudSecondaryAmmo" then
+	if	name == "CHudHealth" or
+		name == "CHudBattery" or
+		name == "CHudAmmo" or
+		name == "CHudSecondaryAmmo" then
 		return false
 	end
 
