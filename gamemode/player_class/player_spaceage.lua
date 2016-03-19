@@ -8,12 +8,8 @@ local PLAYER = {}
 function PLAYER:SetupDataTables()
 	BaseClass.SetupDataTables(self)
 
-	self.Player:NetworkVar("String", 0, "AreaName")
-	self.Player:NetworkVar("Bool", 0, "InSpace")
-
-	if SERVER then
-		self.Player:DataTablesInitialized()
-	end
+	hook.Call("SetupPlayerDatatables", GAMEMODE or GM, self.Player)
+	hook.Call("PostSetupPlayerDatatables", GAMEMODE or GM, self.Player)
 end
 
 player_manager.RegisterClass("player_spaceage", PLAYER, "player_sandbox")

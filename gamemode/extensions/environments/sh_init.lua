@@ -1,9 +1,7 @@
 -- Copyright (C) Charles Leasure, Mark Dietzer, and Michael Johnson d.b.a SpaceAge - All Rights Reserved
 -- See LICENSE file for more information.
 
-DeriveGamemode("sandbox")
-
-include("player_class/player_spaceage.lua")
-
-GM.Name = "SpaceAge"
-GM.VCSInfo = "$Id$"
+function HOOKS:SetupPlayerDatatables(ply)
+	ply:NetworkVar("String", 0, "AreaName")
+	ply:NetworkVar("Bool", 0, "InSpace")
+end
