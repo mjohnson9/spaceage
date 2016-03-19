@@ -12,7 +12,7 @@ function mt:addResource(ent)
 	self.members:insert(ent)
 end
 
-function mt:addResource(ent)
+function mt:removeResource(ent)
 	self.members:remove(ent)
 end
 
