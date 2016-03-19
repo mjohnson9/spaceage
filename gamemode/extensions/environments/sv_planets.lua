@@ -1,9 +1,9 @@
 -- Copyright (C) Charles Leasure, Mark Dietzer, and Michael Johnson d.b.a SpaceAge - All Rights Reserved
 -- See LICENSE file for more information.
 
-local SB_PLANET1_HABITAT = bit.lshift(1, 1)
+--[[local SB_PLANET1_HABITAT = bit.lshift(1, 1)
 local SB_PLANET1_UNSTABLE = bit.lshift(1, 2)
-local SB_PLANET1_SUNBURN = bit.lshift(1, 3)
+local SB_PLANET1_SUNBURN = bit.lshift(1, 3)]]
 
 local function getPlanetV1(logicKV)
 	-- TODO: add support for version 1 planets
@@ -49,7 +49,7 @@ local function getPlanetValues(logicCase)
 	elseif planetVersion == "planet2" then
 		planetValues = getPlanetV2(kv)
 	else
-		ErrorNoHalt("WARNING: Unknown planet type: " .. tostring(planetVersion).."\n")
+		ErrorNoHalt("WARNING: Unknown planet type: " .. tostring(planetVersion) .. "\n")
 		return nil
 	end
 
@@ -59,7 +59,7 @@ local function getPlanetValues(logicCase)
 	return planetValues
 end
 
-function GM:CreatePlanets()
+local function createPlanets()
 	local logicCases = ents.FindByClass("logic_case")
 	for _, ent in ipairs(logicCases) do
 		local planetValues = getPlanetValues(ent)
@@ -87,4 +87,19 @@ function GM:CreatePlanets()
 
 		print("Created planet for " .. tostring(planetValues.name))
 	end
+end
+
+function HOOKS:InitPostEntity()
+	createPlanets()
+end
+
+-- Called after the map is cleaned up.
+function HOOKS:PostCleanupMap()
+	-- Reset everyone's planet list
+	for _, ply in ipairs(player.GetAll()) do
+		ply.planets:clear()
+	end
+
+	-- Recreate the planets because they've now been removed
+	createPlanets()
 end

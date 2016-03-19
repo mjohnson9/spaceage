@@ -1,11 +1,7 @@
 -- Copyright (C) Charles Leasure, Mark Dietzer, and Michael Johnson d.b.a SpaceAge - All Rights Reserved
 -- See LICENSE file for more information.
 
--- Basic gamemode information
-include("info.lua")
+DeriveGamemode("sandbox")
 
--- Loader library
-include("sh_loader.lua")
-
--- Load client files
-loader.loadExtensions("client")
+GM.Name = "SpaceAge"
+GM.VCSInfo = "$Id: cb6d4f682c4799aab60deb81f32f157f4d3a4d05 $"

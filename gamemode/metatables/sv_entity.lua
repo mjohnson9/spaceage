@@ -1,8 +1,8 @@
 -- Copyright (C) Charles Leasure, Mark Dietzer, and Michael Johnson d.b.a SpaceAge - All Rights Reserved
 -- See LICENSE file for more information.
 
-include("../utilities/planet_util.lua")
-include("../utilities/sorted_set.lua")
+local planet_util = require("planet_util")
+local sorted_set = require("sorted_set")
 
 local ENTITY = FindMetaTable("Entity")
 
