@@ -7,7 +7,7 @@ function HOOKS:OnEntityCreated(ent)
 end
 
 -- Called every time a player spawns
-function GM:PlayerSpawn(ply)
+function HOOKS:PlayerSpawn(ply)
 	-- Take over the player hooks with our own
 	player_manager.SetPlayerClass(ply, "player_spaceage")
 end

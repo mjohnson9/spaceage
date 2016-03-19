@@ -10,6 +10,8 @@ local AddCSLuaFile = AddCSLuaFile
 -- store the old require function
 local oldRequire = require
 
+-- override require with a new version that searches our gamemode's modules
+-- folder
 function require(name, ...)
 	local modulePath = GM.FolderName .. "/gamemode/modules"
 
@@ -43,9 +45,8 @@ local gmHooks = {}
 -- cache because we're calling it on every hook return
 local unpack = unpack
 
+-- adds a hook to the GAMEMODE table
 local function addGMHook(hookName, func)
-	local GM = GM or GAMEMODE
-
 	local hookTable = gmHooks[hookName]
 
 	if hookTable == nil then
@@ -67,6 +68,8 @@ local function addGMHook(hookName, func)
 	hookTable[#hookTable + 1] = func
 end
 
+-- by virtue of an index being set in the HOOKS table, adds a hook to the
+-- GAMEMODE table
 function hooksMT:__newindex(hookName, func)
 	assert(type(func) == "function", "HOOKS can only accept functions")
 
@@ -109,6 +112,18 @@ function loader.loadExtensions(context)
 		prefix = "sv"
 	else
 		prefix = "cl"
+	end
+
+	local thirdpartyFolder = GM.FolderName .. "/gamemode/lib"
+
+	for _, thirdpartyFile in SortedPairs(file.Find(thirdpartyFolder .. "/sh_*.lua", "LUA"), true) do
+		MsgN("[LOADER] Loading third party library: " .. thirdpartyFile)
+		include(thirdpartyFolder .. "/" .. thirdpartyFile)
+	end
+
+	for _, thirdpartyFile in SortedPairs(file.Find(thirdpartyFolder .. "/" .. prefix .. "_*.lua", "LUA"), true) do
+		MsgN("[LOADER] Loading third party library: " .. thirdpartyFile)
+		include(thirdpartyFolder .. "/" .. thirdpartyFile)
 	end
 
 	for _, folder in SortedPairs(extensionFolders, true) do
@@ -202,6 +217,20 @@ function loader.addClientFiles()
 
 	for _, metatableFile in SortedPairs(file.Find(metatablesFolder .. "/cl_*.lua", "LUA"), true) do
 		local path = metatablesFolder .. "/" .. metatableFile
+		AddCSLuaFile(path)
+		MsgN("[LOADER] Client file added: " .. path)
+	end
+
+	local thirdpartyFolder = GM.FolderName .. "/gamemode/lib"
+
+	for _, thirdpartyFile in SortedPairs(file.Find(thirdpartyFolder .. "/sh_*.lua", "LUA"), true) do
+		local path = thirdpartyFolder .. "/" .. thirdpartyFile
+		AddCSLuaFile(path)
+		MsgN("[LOADER] Client file added: " .. path)
+	end
+
+	for _, thirdpartyFile in SortedPairs(file.Find(thirdpartyFolder .. "/cl_*.lua", "LUA"), true) do
+		local path = thirdpartyFolder .. "/" .. thirdpartyFile
 		AddCSLuaFile(path)
 		MsgN("[LOADER] Client file added: " .. path)
 	end
