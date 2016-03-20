@@ -1,3 +1,4 @@
 *.bsp filter=lfs diff=lfs merge=lfs -text
 *.vmf eol=crlf
 *.nav filter=lfs diff=lfs merge=lfs -text
+*.ain filter=lfs diff=lfs merge=lfs -text
