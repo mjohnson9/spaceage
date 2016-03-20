@@ -20,5 +20,8 @@ function HOOKS:PlayerLoadout(ply)
 	-- Give them the empty hands SWEP
 	ply:Give("weapon_fists")
 
+	-- Start with fists selected
+	ply:SelectWeapon("weapon_fists")
+
 	return true -- prevent the default loadout
 end
