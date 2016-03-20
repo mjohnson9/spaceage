@@ -11,16 +11,17 @@ function ENT:Initialize()
 
 	local mins = Vector(negRadius, negRadius, negRadius)
 	local maxs = Vector(radius, radius, radius)
-	if not self.planetInfo.cube then
-		--print("Created cube of radius " .. tostring(radius))
-		--self:PhysicsInitBox(mins, maxs)
-		ErrorNoHalt("Spherical planets are presently represented by cubes due to limitations in Garry's Mod.\n")
-	--else
-		--self:PhysicsInitSphere(radius, "default_silent")
+	if self.planetInfo.cube then
+		self:PhysicsInitBox(mins, maxs)
+	else
+		-- TODO: I'm not actually sure if this is working or not. It needs more
+		-- research.
+
+		self:PhysicsInitSphere(radius, "default_silent")
+		--MsgN("Spherical planets are presently represented by cubes due to limitations in Garry's Mod.")
 	end
 
 	self:SetCollisionBounds(mins, maxs)
-	self:SetSolid(SOLID_BBOX)
 
 	self:SetTrigger(true)
 end
