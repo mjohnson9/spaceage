@@ -20,6 +20,9 @@ function HOOKS:PlayerLoadout(ply)
 	-- Give them the empty hands SWEP
 	ply:Give("weapon_fists")
 
+	-- Give them a tool gun
+	ply:Give("gmod_tool")
+
 	-- Start with fists selected
 	ply:SelectWeapon("weapon_fists")
 
