@@ -30,8 +30,8 @@ function HOOKS:HUDPaint()
 	local playerHealthPercent = mathMin(playerHealthText, 100)
 	local playerEnergyText = mathMax(localPlayer:Armor(), 0)
 	local playerEnergyPercent = mathMin(playerEnergyText, 100)
-	local playerOxygen = 60
-	local playerCoolant = 20
+	local playerOxygen = localPlayer:GetOxygen()
+	local playerCoolant = localPlayer:GetCoolant()
 	local screenHeight = ScrH()
 
 	-- Local Functions

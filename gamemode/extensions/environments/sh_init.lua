@@ -4,4 +4,6 @@
 function HOOKS:SetupPlayerDatatables(ply)
 	ply:NetworkVar("String", 0, "AreaName")
 	ply:NetworkVar("Bool", 0, "InSpace")
+	ply:NetworkVar("Int", 0, "Oxygen")
+	ply:NetworkVar("Int", 1, "Coolant")
 end
