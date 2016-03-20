@@ -17,6 +17,9 @@ end
 function ENT:CreatePanel()
 end
 
+function ENT:UpdatePanel()
+end
+
 function ENT:GetPanelPos()
 	local renderPos = self.RenderPosition
 	if renderPos ~= nil then
@@ -31,6 +34,8 @@ function ENT:RenderPanel()
 	if self.statusPanel == nil then
 		return
 	end
+
+	self:UpdatePanel()
 
 	local pos, ang, scale = self:GetPanelPos()
 	vgui.Start3D2D(pos, ang, scale)

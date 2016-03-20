@@ -7,5 +7,5 @@ include("shared.lua")
 
 function ENT:Think()
 	self:CalcThinkTime()
-	self:GenerateResource("energy", 200)
+	self:GenerateResource("Energy", 200)
 end

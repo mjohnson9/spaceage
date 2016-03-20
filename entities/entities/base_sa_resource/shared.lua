@@ -30,4 +30,15 @@ end
 
 function ENT:SetupDataTables()
 	self:NetworkVar("Int", 0, "NetworkID")
+
+	local varNum = 1
+	for resourceName, _ in SortedPairs(self.ResourceStorage, true) do
+		self:NetworkVar("Int", varNum, resourceName)
+		varNum = varNum + 1
+	end
+
+	self:PostSetupDataTables()
+end
+
+function ENT:PostSetupDataTables()
 end

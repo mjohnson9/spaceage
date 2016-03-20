@@ -9,3 +9,7 @@ ENT.Purpose = "Stores electricity"
 ENT.Instructions = "Connect to an electricity producing device"
 
 ENT.Spawnable = true
+
+ENT.ResourceStorage = {
+	Energy = 10000
+}
