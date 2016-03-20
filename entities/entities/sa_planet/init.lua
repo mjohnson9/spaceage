@@ -23,6 +23,8 @@ function ENT:Initialize()
 
 	self:SetCollisionBounds(mins, maxs)
 
+	self:SetMoveType(MOVETYPE_NONE) -- planets should never move
+
 	self:SetTrigger(true)
 end
 
