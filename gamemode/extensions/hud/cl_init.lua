@@ -25,7 +25,7 @@ end
 
 function HOOKS:HUDPaint()
 	-- Local Variables
-	local playerArea   = localPlayer:GetAreaName()
+	local playerArea = localPlayer:GetAreaName()
 	local playerHealthText = mathMax(localPlayer:Health(), 0)
 	local playerHealthPercent = mathMin(playerHealthText, 100)
 	local playerEnergyText = mathMax(localPlayer:Armor(), 0)
