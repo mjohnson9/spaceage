@@ -1,4 +1,4 @@
-include("sorted_set.lua")
+local sorted_set = require("sorted_set")
 
 local setmetatable = setmetatable
 local sortedSetNew = sorted_set.new
