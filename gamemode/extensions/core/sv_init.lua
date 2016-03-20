@@ -17,14 +17,11 @@ function HOOKS:PlayerLoadout(ply)
 	-- Give them a physgun
 	ply:Give("weapon_physgun")
 
-	-- Give them the empty hands SWEP
-	ply:Give("weapon_fists")
-
 	-- Give them a tool gun
 	ply:Give("gmod_tool")
 
-	-- Start with fists selected
-	ply:SelectWeapon("weapon_fists")
+	-- Start with physgun selected
+	ply:SelectWeapon("weapon_physgun")
 
 	return true -- prevent the default loadout
 end
