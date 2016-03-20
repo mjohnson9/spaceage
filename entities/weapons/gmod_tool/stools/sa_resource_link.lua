@@ -52,8 +52,7 @@ function TOOL:LeftClick(trace)
 
 			local ropeLength = sourceWorldPos:Distance(targetWorldPos)
 
-			local constraint, ent = constraint.Rope(source, target, sourceBone, targetBone, sourceLocalPos, targetLocalPos, ropeLength, 32, 0, 1.5, "cable/cable2", false)
-			print(rope, ent)
+			constraint.Rope(source, target, sourceBone, targetBone, sourceLocalPos, targetLocalPos, ropeLength, 32, 0, 1.5, "cable/cable2", false)
 		end
 
 		self:SetStage(0)
