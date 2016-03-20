@@ -23,8 +23,6 @@ function TOOL:LeftClick(trace)
 	local operationNum = self:NumObjects() -- how many objects have been linked so far?
 	self:SetObject(operationNum + 1, trace.Entity, trace.HitPos, trace.Entity:GetPhysicsObjectNum(trace.PhysicsBone), trace.PhysicsBone, trace.HitNormal)
 
-	print("operationNum: ", operationNum)
-
 	if operationNum == 1 then
 		local source = self:GetEnt(1)
 		local target = self:GetEnt(2)
