@@ -3,11 +3,22 @@
 
 -- Called every time that an entity is created
 function HOOKS:OnEntityCreated(ent)
+	-- Initialize SpaceAge-specific members
 	ent:InitializeSpaceAge()
 end
 
--- Called every time a player spawns
-function HOOKS:PlayerSpawn(ply)
+-- Called whenever a player spawns and is ready to receive their loadout
+function HOOKS:PlayerLoadout(ply)
 	-- Take over the player hooks with our own
+	-- We do this here instead of in PlayerSpawn because sandbox will override
+	-- us if we do it in PlayerSpawn
 	player_manager.SetPlayerClass(ply, "player_spaceage")
+
+	-- Give them a physgun
+	ply:Give("weapon_physgun")
+
+	-- Give them the empty hands SWEP
+	ply:Give("weapon_fists")
+
+	return true -- prevent the default loadout
 end

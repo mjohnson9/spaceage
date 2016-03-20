@@ -42,8 +42,38 @@ hooksMT.__index = hooksMT
 
 local gmHooks = {}
 
+-- We need to have access to the Sandbox gamemode in order to call it as a base
+-- class
+local sandboxGM = baseclass.Get("gamemode_sandbox")
+
 -- cache because we're calling it on every hook return
 local unpack = unpack
+
+local function createGMHook(hookName)
+	local baseFunc = sandboxGM[hookName]
+	return function(...)
+		for _, f in pairs(gmHooks[hookName]) do
+			local retVals = {f(...)}
+			if #retVals > 0 then
+				local shouldReturn = false
+				for _, v in ipairs(retVals) do
+					if v ~= nil then
+						shouldReturn = true
+						break
+					end
+				end
+
+				if shouldReturn then
+					return unpack(retVals)
+				end
+			end
+		end
+
+		if baseFunc ~= nil then
+			return baseFunc(...)
+		end
+	end
+end
 
 -- adds a hook to the GAMEMODE table
 local function addGMHook(hookName, func)
@@ -55,14 +85,7 @@ local function addGMHook(hookName, func)
 	end
 
 	if GM[hookName] == nil then
-		GM[hookName] = function(...)
-			for _, f in pairs(gmHooks[hookName]) do
-				local retVals = {f(...)}
-				if #retVals > 0 then
-					return unpack(retVals)
-				end
-			end
-		end
+		GM[hookName] = createGMHook(hookName)
 	end
 
 	hookTable[#hookTable + 1] = func
@@ -73,7 +96,6 @@ end
 function hooksMT:__newindex(hookName, func)
 	assert(type(func) == "function", "HOOKS can only accept functions")
 
-	-- hook.Add(hookName, self._fileName, func)
 	addGMHook(hookName, func)
 end
 
