@@ -19,6 +19,18 @@ function ENT:GenerateResource(name, amtPerSec)
 	self.resourceNetwork:insertResource(name, amt)
 end
 
+-- cache for performance
+local mathMin = math.min
+
+function ENT:StoreResource(resourceType, amount)
+	local currentlyStored = self["Get" .. resourceType](self)
+
+	local willStore = mathMin(self.ResourceStorage[resourceType] - currentlyStored, amount)
+	self["Set" .. resourceType](self, currentlyStored + willStore)
+
+	return willStore
+end
+
 function ENT:GetResourceNetwork()
 	return self.resourceNetwork
 end
@@ -55,6 +67,8 @@ function ENT:ResourceLink(target)
 		return
 	end
 
+	-- Remaining case: merging two networks
+
 	error("not yet implemented")
 end
 
@@ -78,4 +92,8 @@ function ENT:JoinNetwork(network)
 	self.resourceNetwork:addResource(self)
 
 	self:SetNetworkID(self.resourceNetwork.id)
+end
+
+function ENT:OnRemove()
+	self:JoinNetwork(nil) -- leave our current network
 end

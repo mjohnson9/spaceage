@@ -12,3 +12,5 @@ ENT.Instructions = ""
 ENT.Spawnable = false
 
 ENT.ResourceLinkable = true
+
+ENT.ResourceStorage = {}

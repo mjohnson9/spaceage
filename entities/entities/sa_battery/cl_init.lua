@@ -10,16 +10,21 @@ function ENT:GetPanelPos()
 end
 
 function ENT:CreatePanel()
-	local primaryPanel = vgui.Create("DPanel")
+	local primaryPanel = vgui.Create("DProgress")
 
 	primaryPanel:SetPos(0, 0)
 	primaryPanel:SetSize(182, 182)
+	primaryPanel:SetFraction(0)
 
-	local DLabel = vgui.Create("DLabel", primaryPanel)
+	--[[local DLabel = vgui.Create("DLabel", primaryPanel)
 	DLabel:SetPos(10, 10)
 	DLabel:SetText("Hello, world!")
 	DLabel:SizeToContents()
-	DLabel:SetDark(1)
+	DLabel:SetDark(1)]]
 
 	return primaryPanel
+end
+
+function ENT:UpdatePanel()
+	self.statusPanel:SetFraction(self:GetEnergy() / self.ResourceStorage.Energy)
 end
