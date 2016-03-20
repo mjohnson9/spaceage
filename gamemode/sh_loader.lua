@@ -13,7 +13,7 @@ local oldRequire = require
 -- override require with a new version that searches our gamemode's modules
 -- folder
 function require(name, ...)
-	local modulePath = GM.FolderName .. "/gamemode/modules"
+	local modulePath = (GM or GAMEMODE).FolderName .. "/gamemode/modules"
 
 	local sharedPath = modulePath .. "/sh_" .. name .. ".lua"
 	if file.Exists(sharedPath, "LUA") then

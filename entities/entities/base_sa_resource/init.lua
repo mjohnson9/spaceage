@@ -5,6 +5,8 @@ AddCSLuaFile("shared.lua")
 include("info.lua")
 include("shared.lua")
 
+local resource_network = require("resource_network")
+
 function ENT:ServerInitialize()
 	self:PhysicsInit(SOLID_VPHYSICS)
 end
