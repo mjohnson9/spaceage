@@ -2,7 +2,6 @@
 -- See LICENSE file for more information.
 
 -- Cache the hud backgrounds to prevent call them every frame
-local hudBackground = Material("spaceage/hud_background.png")
 local hudDrain = Material("spaceage/hud_drain.png")
 
 -- localize functions to prevent global table lookups every frame
@@ -18,6 +17,52 @@ local colorCoolant = Color(0, 180, 231)
 local colorBlack = Color(0, 0, 0)
 
 local localPlayer = LocalPlayer() -- save for later so that we aren't calling LocalPlayer every frame
+local screenHeight = ScrH()
+
+-- Create HUD Container
+local hudContainer = vgui.Create("DPanel")
+hudContainer:SetSize(306, 111)
+hudContainer:SetPos(5, screenHeight - 122)
+hudContainer:SetPaintBackground(false)
+hudContainer:ParentToHUD()
+
+local hudContainerBackground = vgui.Create("DImage", hudContainer)
+hudContainerBackground:SetSize(hudContainer:GetSize())
+hudContainerBackground:SetImage("spaceage/hud_background.png")
+
+-- Create Environment Label
+local environmentLabel = vgui.Create("DPanel", hudContainer)
+environmentLabel:SetPos(43, 5)
+
+-- Create Resource Labels
+local healthLabel = vgui.Create( "DPanel", hudContainer )
+healthLabel:SetPos( 137, 90 )
+
+local energyLabel = vgui.Create( "DPanel", hudContainer )
+energyLabel:SetPos( 183, 90 )
+
+local oxygenLabel = vgui.Create( "DPanel", hudContainer )
+oxygenLabel:SetPos( 229, 90 )
+
+local coolantLabel = vgui.Create( "DPanel", hudContainer )
+coolantLabel:SetPos( 275, 90 )
+
+-- Create Resource Bars
+local healthBar = vgui.Create("DPanel", hudContainer)
+healthBar:SetPos(133, 28)
+healthBar:SetSize(27, 0)
+
+local energyBar = vgui.Create("DPanel", hudContainer)
+energyBar:SetPos(179, 28)
+energyBar:SetSize(27, 0)
+
+local oxygenBar = vgui.Create("DPanel", hudContainer)
+oxygenBar:SetPos(225, 28)
+oxygenBar:SetSize(27, 0)
+
+local coolantBar = vgui.Create("DPanel", hudContainer)
+coolantBar:SetPos(271, 28)
+coolantBar:SetSize(27, 0)
 
 function HOOKS:InitPostEntity()
 	localPlayer = LocalPlayer()
@@ -32,7 +77,6 @@ function HOOKS:HUDPaint()
 	local playerEnergyPercent = mathMin(playerEnergyText, 100)
 	local playerOxygen = localPlayer:GetOxygen()
 	local playerCoolant = localPlayer:GetCoolant()
-	local screenHeight = ScrH()
 
 	-- Local Functions
 	local playerHealthAdjust = (62) * ((100 - playerHealthPercent) / 100)
@@ -40,41 +84,51 @@ function HOOKS:HUDPaint()
 	local playerOxygenAdjust = (62) * ((100 - playerOxygen) / 100)
 	local playerCoolantAdjust = (62) * ((100 - playerCoolant) / 100)
 
-	-- Draw Base HUD
-	surface.SetDrawColor(255, 255, 255, 255)
-	surface.SetMaterial(hudBackground)
-	surface.DrawTexturedRect(5, screenHeight - 122, 306, 111)
+	-- Update EnvironmentLabel
+	environmentLabel.Paint = function()
+	 	draw.SimpleTextOutlined(playerArea, "DermaDefaultBold", 20, 0, colorEnvironment, TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP, 1, colorBlack)
+	 end
+	-- Update Resource Labels
+	healthLabel.Paint = function()
+		draw.SimpleTextOutlined(playerHealthPercent, "DermaDefaultBold", 9, 0, colorHealth, TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP, 1, colorBlack)
+	end
 
-	-- Draw Environment Name
-	draw.SimpleTextOutlined(playerArea, "DermaDefaultBold", 70, screenHeight - 113, colorEnvironment, TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP, 1, colorBlack)
+	energyLabel.Paint = function()
+		draw.SimpleTextOutlined(playerEnergyPercent, "DermaDefaultBold", 10, 0, colorEnergy, TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP, 1, colorBlack)
+	end
 
-	-- Draw Health Bar
-	surface.SetDrawColor(255, 255, 255, 255)
-	surface.SetMaterial(hudDrain)
-	surface.DrawTexturedRect(138, screenHeight - 94, 27, playerHealthAdjust)
-	-- Draw Health Percent
-	draw.SimpleTextOutlined(playerHealthText, "DermaDefaultBold", 151, screenHeight - 31, colorHealth, TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP, 1, colorBlack)
+	oxygenLabel.Paint = function()
+		draw.SimpleTextOutlined(playerOxygen, "DermaDefaultBold", 10, 0, colorOxygen, TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP, 1, colorBlack)
+	end
 
-	-- Draw Energy Bar
-	surface.SetDrawColor(255, 255, 255, 255)
-	surface.SetMaterial(hudDrain)
-	surface.DrawTexturedRect(184, screenHeight - 94, 27, playerEnergyAdjust)
-	-- Draw Energy Percent
-	draw.SimpleTextOutlined(playerEnergyText, "DermaDefaultBold", 197, screenHeight - 31, colorEnergy, TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP, 1, colorBlack)
+	coolantLabel.Paint = function()
+		draw.SimpleTextOutlined(playerCoolant, "DermaDefaultBold", 10, 0, colorCoolant, TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP, 1, colorBlack)
+	end
 
-	-- Draw Oxygen Bar
-	surface.SetDrawColor(255, 255, 255, 255)
-	surface.SetMaterial(hudDrain)
-	surface.DrawTexturedRect(230, screenHeight - 94, 27, playerOxygenAdjust)
-	-- Draw Oxygen Percent
-	draw.SimpleTextOutlined(playerOxygen, "DermaDefaultBold", 243, screenHeight - 31, colorOxygen, TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP, 1, colorBlack)
+	-- Update Resource Bars
+	healthBar:SetSize(27, playerHealthAdjust)
+	healthBar.Paint = function()
+		surface.SetMaterial(hudDrain)
+		healthBar:DrawTexturedRect()
+	end
 
-	-- Draw Coolant Bar
-	surface.SetDrawColor(255, 255, 255, 255)
-	surface.SetMaterial(hudDrain)
-	surface.DrawTexturedRect(276, screenHeight - 94, 27, playerCoolantAdjust)
-	-- Draw Coolant Percent
-	draw.SimpleTextOutlined(playerCoolant, "DermaDefaultBold", 290, screenHeight - 31, colorCoolant, TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP, 1, colorBlack)
+	energyBar:SetSize(27, playerEnergyAdjust)
+	energyBar.Paint = function()
+		surface.SetMaterial(hudDrain)
+		energyBar:DrawTexturedRect()
+	end
+
+	oxygenBar:SetSize(27, playerOxygenAdjust)
+	oxygenBar.Paint = function()
+		surface.SetMaterial(hudDrain)
+		oxygenBar:DrawTexturedRect()
+	end
+
+	coolantBar:SetSize(27, playerCoolantAdjust)
+	coolantBar.Paint = function()
+		surface.SetMaterial(hudDrain)
+		oxygenBar:DrawTexturedRect()
+	end
 end
 
 function HOOKS:HUDShouldDraw(name)
