@@ -1,0 +1,5 @@
+.git*
+.editorconfig
+*.md
+*.fgd
+glualint.json
