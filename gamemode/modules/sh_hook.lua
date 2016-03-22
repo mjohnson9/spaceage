@@ -8,6 +8,7 @@ local isstring = isstring
 local IsValid = IsValid
 local pairs = pairs
 local unpack = unpack
+local debugTraceback = debug.traceback
 
 local sorted_set = require("sorted_set")
 
@@ -36,7 +37,7 @@ end
     Desc: Returns a table of all hooks.
 -----------------------------------------------------------]]
 function GetTable()
-	ErrorNoHalt("hook.GetTable is slow. Don't use it.\n")
+	ErrorNoHalt("hook.GetTable is slow. Don't use it.\n" .. debugTraceback() .. "\n")
 
 	local retVal = {}
 
