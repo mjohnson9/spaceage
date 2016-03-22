@@ -36,6 +36,9 @@ function require(name, ...)
 	return oldRequire(name, ...)
 end
 
+include("modules/sh_sorted_set.lua") -- hook requires sorted_set
+include("modules/sh_hook.lua") -- override hook module with ours
+
 local hooksMT = {}
 
 hooksMT.__index = hooksMT
@@ -49,23 +52,23 @@ local sandboxGM = baseclass.Get("gamemode_sandbox")
 -- cache because we're calling it on every hook return
 local unpack = unpack
 
+local function hasReturnVal(t)
+	for _, v in ipairs(t) do
+		if v ~= nil then
+			return true
+		end
+	end
+
+	return false
+end
+
 local function createGMHook(hookName)
 	local baseFunc = sandboxGM[hookName]
 	return function(...)
 		for _, f in pairs(gmHooks[hookName]) do
 			local retVals = {f(...)}
-			if #retVals > 0 then
-				local shouldReturn = false
-				for _, v in ipairs(retVals) do
-					if v ~= nil then
-						shouldReturn = true
-						break
-					end
-				end
-
-				if shouldReturn then
-					return unpack(retVals)
-				end
+			if hasReturnVal(retVals) then
+				return unpack(retVals)
 			end
 		end
 

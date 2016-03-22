@@ -8,7 +8,7 @@ module("sorted_set")
 local mt = {}
 mt.__index = mt
 
-local function searchValue(t, value, compareFunc)
+local function searchValue(t, value, compareFunc, equalFunc)
 	--  Initialize numbers
 	local first, last, middle, add = 1, #t, 1, 0
 	-- Get insert position
@@ -25,7 +25,7 @@ local function searchValue(t, value, compareFunc)
 
 	local insertPoint = middle + add
 
-	if t[insertPoint - 1] == value then
+	if equalFunc(t[insertPoint - 1], value) then
 		return insertPoint - 1
 	end
 
@@ -33,7 +33,7 @@ local function searchValue(t, value, compareFunc)
 end
 
 function mt:insert(item)
-	local index = searchValue(self, item, self._compareFunc)
+	local index = searchValue(self, item, self._compareFunc, self._equalFunc)
 	if index > 0 then
 		return false
 	end
@@ -42,13 +42,23 @@ function mt:insert(item)
 	return true
 end
 
+function mt:replace(item)
+	local index = searchValue(self, item, self._compareFunc, self._equalFunc)
+	if index > 0 then
+		self[index] = item
+		return
+	end
+
+	tableInsert(self, -index, item)
+end
+
 function mt:contains(item)
-	local index = searchValue(self, item, self._compareFunc)
+	local index = searchValue(self, item, self._compareFunc, self._equalFunc)
 	return index > 0
 end
 
 function mt:remove(item)
-	local index = searchValue(self, item, self._compareFunc)
+	local index = searchValue(self, item, self._compareFunc, self._equalFunc)
 	if index <= 0 then
 		return false
 	end
@@ -67,17 +77,25 @@ local function defaultCompare(a1, a2)
 	return a1 < a2
 end
 
+local function defaultEqual(a1, a2)
+	return a1 == a2
+end
+
 ---
 -- Creates a new sorted set
 -- @param compareFunc a comparison function of the signature function(a, b) -- it should return true whenever a is less than b
 -- @return a sorted set
-function new(compareFunc)
+function new(compareFunc, equalFunc)
 	if compareFunc == nil then
 		compareFunc = defaultCompare
 	end
+	if equalFunc == nil then
+		equalFunc = defaultEqual
+	end
 
 	local queue = {
-		_compareFunc = compareFunc
+		_compareFunc = compareFunc,
+		_equalFunc = equalFunc,
 	}
 
 	setmetatable(queue, mt)
