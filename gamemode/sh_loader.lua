@@ -36,9 +36,6 @@ function require(name, ...)
 	return oldRequire(name, ...)
 end
 
-include("modules/sh_sorted_set.lua") -- hook requires sorted_set
-include("modules/sh_hook.lua") -- override hook module with ours
-
 local hooksMT = {}
 
 hooksMT.__index = hooksMT
