@@ -29,7 +29,11 @@ local function hookEquals(a, b)
 end
 
 local function hookCompare(a, b)
-	return a.name < b.name
+	if isstring(a.name) and isstring(b.name) then
+		return a.name < b.name
+	end
+
+	return a.name:EntIndex() < b.name:EntIndex()
 end
 
 --[[---------------------------------------------------------
@@ -99,6 +103,10 @@ function Run(name, ...)
 end
 
 local function hasReturnVal(t)
+	if t == nil then
+		return false
+	end
+
 	for _, v in ipairs(t) do
 		if v ~= nil then
 			return true
