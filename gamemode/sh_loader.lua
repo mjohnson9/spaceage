@@ -71,20 +71,6 @@ local function requireSearcher(name)
 	end
 end
 
-if package.loaders._saInserted then
-	local pos = table.KeyFromValue(package.loaders, package.loaders._saInserted)
-	if pos == nil then
-		table.insert(package.loaders, requireSearcher)
-		package.loaders._saInserted = requireSearcher
-	else
-		package.loaders[pos] = requireSearcher
-		package.loaders._saInserted = requireSearcher
-	end
-else
-	table.insert(package.loaders, requireSearcher)
-	package.loaders._saInserted = requireSearcher
-end
-
 local hooksMT = {}
 
 hooksMT.__index = hooksMT
@@ -197,10 +183,26 @@ function loader.loadExtensions(context)
 		include(thirdpartyFolder .. "/" .. thirdpartyFile)
 	end
 
+	local modulesFolder = GM.FolderName .. "/gamemode/modules"
+
+	for _, moduleFile in SortedPairs(file.Find(modulesFolder .. "/sh_*.lua", "LUA"), true) do
+		local moduleName = string.match(moduleFile, "^sh_(.*)%.lua$")
+		local path = modulesFolder .. "/" .. moduleFile
+		package.preload[moduleName] = CompileFile(path)
+		MsgN("[LOADER] Module " .. moduleName .. " preloaded")
+	end
+
+	for _, moduleFile in SortedPairs(file.Find(modulesFolder .. "/" .. prefix .. "_*.lua", "LUA"), true) do
+		local moduleName = string.match(moduleFile, "^" .. prefix .. "_(.*)%.lua$")
+		local path = modulesFolder .. "/" .. moduleFile
+		package.preload[moduleName] = CompileFile(path)
+		MsgN("[LOADER] Module " .. moduleName .. " preloaded")
+	end
+
 	for _, folder in SortedPairs(extensionFolders, true) do
 		MsgN("[LOADER] Loading extension \"" .. folder .. "\"")
 
-		-- always load shared modules first
+		-- always load shared extensions first
 		for _, sharedFile in SortedPairs(file.Find(extensionFolder .. "/" .. folder .. "/sh_*.lua", "LUA"), true) do
 			MsgN("\t" .. sharedFile)
 			loadExtension(extensionFolder .. "/" .. folder .. "/" .. sharedFile)
