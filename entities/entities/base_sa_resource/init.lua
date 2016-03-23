@@ -43,7 +43,7 @@ function ENT:ResourceLink(target)
 	if self.resourceNetwork == nil and target.resourceNetwork == nil then
 		-- neither resource has a network, create a new network and join them
 
-		local network = resource_network.new()
+		local network = resource_network()
 
 		self:JoinNetwork(network)
 		target:JoinNetwork(network)

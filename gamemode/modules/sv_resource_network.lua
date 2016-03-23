@@ -1,31 +1,72 @@
-local sorted_set = require("sorted_set")
+local class = require("middleclass").class
 
-local ipairs = ipairs
 local mathFloor = math.floor
 local pairs = pairs
 local setmetatable = setmetatable
-local sortedSetNew = sorted_set.new
+
 
 module("resource_network")
 
-local function resourceEntityCompare(ent1, ent2)
-	return ent1:EntIndex() < ent2:EntIndex()
+local tableIsEmpty
+
+local ResourceNetwork = class("ResourceNetwork")
+
+local currentID = 1
+
+function ResourceNetwork:initialize()
+	self.id = currentID
+	currentID = currentID + 1
+
+	self.members = {}
+	self.resources = {}
 end
 
-local mt = {}
-mt.__index = mt
-
-function mt:addResource(ent)
-	self.members:insert(ent)
-	self:addResourceStorage(ent)
+function ResourceNetwork:addResource(ent)
+	self.members[ent:EntIndex()] = true
+	self:_addResourceStorage(ent)
 end
 
-function mt:removeResource(ent)
-	self.members:remove(ent)
-	self:removeResourceStorage(ent)
+function ResourceNetwork:_addResourceStorage(ent)
+	for resourceType, availableStorage in pairs(ent.ResourceStorage) do
+		local resourceTable = self.resources[resourceType]
+
+		if resourceTable == nil then
+			resourceTable = {
+				storageEnts = {},
+			}
+
+			self.resources[resourceType] = resourceTable
+		end
+
+		resourceTable.storageEnts[ent:EntIndex()] = true
+	end
 end
 
-function mt:insertResource(resourceType, amount)
+function ResourceNetwork:removeResource(ent)
+	self.members[ent:EntIndex()] = nil
+	self:_removeResourceStorage(ent)
+end
+
+function ResourceNetwork:_removeResourceStorage(ent)
+	for resourceType, availableStorage in pairs(ent.ResourceStorage) do
+		local resourceTable = self.resources[resourceType]
+
+		if resourceTable ~= nil then
+			resourceTable.storageEnts[ent:EntIndex()] = nil
+		end
+
+		if tableIsEmpty(resourceTable) then
+			self.resources[resourceType] = nil
+		end
+	end
+end
+
+---
+-- Injects a resource into the network
+-- @param resourceType the type of resource to inject
+-- @param amount how much of the resource to inject
+-- @return the amount of the resource actually injected - will be 0 < n ≤ amount
+function ResourceNetwork:injectResource(resourceType, amount)
 	local resourceTable = self.resources[resourceType]
 
 	if resourceTable == nil then
@@ -35,7 +76,9 @@ function mt:insertResource(resourceType, amount)
 	amount = mathFloor(amount)
 	local totalStored = 0
 
-	for _, ent in ipairs(resourceTable.storageEnts) do
+	for entID in pairs(resourceTable.storageEnts) do
+		local ent = ents.GetByIndex(entID)
+
 		local stored = ent:StoreResource(resourceType, amount)
 		totalStored = totalStored + stored
 		amount = amount - stored
@@ -48,45 +91,8 @@ function mt:insertResource(resourceType, amount)
 	return totalStored
 end
 
-function mt:addResourceStorage(ent)
-	for resourceType, availableStorage in pairs(ent.ResourceStorage) do
-		local resourceTable = self.resources[resourceType]
-
-		if resourceTable == nil then
-			resourceTable = {
-				storageEnts = sortedSetNew(resourceEntityCompare),
-			}
-
-			self.resources[resourceType] = resourceTable
-		end
-
-		resourceTable.storageEnts:insert(ent)
-	end
+local function tableIsEmpty(t)
+	return next(t) ~= nil
 end
 
-function mt:removeResourceStorage(ent)
-	for resourceType, availableStorage in pairs(ent.ResourceStorage) do
-		local resourceTable = self.resources[resourceType]
-
-		if resourceTable ~= nil then
-			resourceTable.storageEnts:remove(ent)
-		end
-	end
-end
-
-local networkID = 1
-
-function new()
-	local network = {
-		id = networkID,
-
-		members = sortedSetNew(resourceEntityCompare),
-		resources = {},
-	}
-
-	networkID = networkID + 1
-
-	setmetatable(network, mt)
-
-	return network
-end
+return ResourceNetwork

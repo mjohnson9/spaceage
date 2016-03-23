@@ -8,11 +8,15 @@ local include = include
 local AddCSLuaFile = AddCSLuaFile
 
 -- store the old require function
-local oldRequire = require
+--local oldRequire = require
 
 -- override require with a new version that searches our gamemode's modules
 -- folder
-function require(name, ...)
+--[[function require(name, ...)
+	if package.loaded[name] then
+		return package.loaded[name]
+	end
+
 	local modulePath = (GM or GAMEMODE).FolderName .. "/gamemode/modules"
 
 	local sharedPath = modulePath .. "/sh_" .. name .. ".lua"
@@ -34,6 +38,51 @@ function require(name, ...)
 	end
 
 	return oldRequire(name, ...)
+end]]
+
+local function requireLoader(name, path)
+	local ret = include(path)
+	if ret ~= nil then
+		print("Got return loading", path, ":", ret)
+		return ret
+	end
+
+	return package.loaded[name]
+end
+
+local function requireSearcher(name)
+	local modulePath = (GM or GAMEMODE).FolderName .. "/gamemode/modules"
+
+	local sharedPath = modulePath .. "/sh_" .. name .. ".lua"
+	if file.Exists(sharedPath, "LUA") then
+		include(sharedPath)
+		return requireLoader, sharedPath
+	end
+
+	local contextPath
+	if SERVER then
+		contextPath = modulePath .. "/sv_" .. name .. ".lua"
+	else
+		contextPath = modulePath .. "/cl_" .. name .. ".lua"
+	end
+
+	if file.Exists(contextPath, "LUA") then
+		return requireLoader, contextPath
+	end
+end
+
+if package.loaders._saInserted then
+	local pos = table.KeyFromValue(package.loaders, package.loaders._saInserted)
+	if pos == nil then
+		table.insert(package.loaders, requireSearcher)
+		package.loaders._saInserted = requireSearcher
+	else
+		package.loaders[pos] = requireSearcher
+		package.loaders._saInserted = requireSearcher
+	end
+else
+	table.insert(package.loaders, requireSearcher)
+	package.loaders._saInserted = requireSearcher
 end
 
 local hooksMT = {}
