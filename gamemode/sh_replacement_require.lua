@@ -2,10 +2,12 @@
 -- See LICENSE file for more information.
 
 local oldRequire
+-- if this is a reload, use the original require function
 if replacementRequire and replacementRequire.oldRequire ~= nil then
 	oldRequire = replacementRequire.oldRequire
 end
 
+-- remove all of our own old loaders
 if replacementRequire and replacementRequire.ourLoaders ~= nil then
 	for _, v in pairs(replacementRequire.ourLoaders) do
 		table.RemoveByValue(package.loaders, v)
@@ -22,8 +24,8 @@ if oldRequire == nil then
 end
 replacementRequire.oldRequire = oldRequire
 
--- override require with a new version that searches our gamemode's modules
--- folder
+-- override require with a new version that follows most of the Lua
+-- specification
 function require(name)
 	if package.loaded[name] ~= nil then
 		return package.loaded[name]
@@ -46,9 +48,9 @@ function require(name)
 	end
 
 	if loader == nil then
-		local errorReason = "module " .. tostring(name) .. " not found:\n"
+		local errorReason = "module '" .. tostring(name) .. "' not found:"
 		for _, reason in ipairs(reasons) do
-			errorReason = errorReason .. reason .. "\n"
+			errorReason = errorReason .. reason
 		end
 
 		error(errorReason)
@@ -66,7 +68,13 @@ function require(name)
 	return package.loaded[name]
 end
 
+----- PATH LOADING -----
+
+
 local function binaryModuleSearcher(name)
+	-- we don't look at package.cpath for this because we have no control over
+	-- the path of the binary loading
+
 	local prefix
 	if SERVER then
 		prefix = "gmsv"
@@ -94,7 +102,7 @@ local function binaryModuleSearcher(name)
 		return oldRequire
 	end
 
-	return "no file '" .. binPath .. "'"
+	return "\n\tno file '" .. binPath .. "'"
 end
 
 replacementRequire.ourLoaders["binary"] = binaryModuleSearcher
@@ -133,7 +141,7 @@ local function pathSearcher(name)
 		reasons[#reasons + 1] = "no file '" .. path .. "'"
 	end
 
-	return string.Implode("\n\t", reasons)
+	return "\n\t" .. string.Implode("\n\t", reasons)
 end
 
 replacementRequire.ourLoaders["path"] = pathSearcher

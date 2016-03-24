@@ -1,4 +1,4 @@
-local class = require("middleclass").class
+local class = require("middleclass")
 
 local mathFloor = math.floor
 local pairs = pairs
