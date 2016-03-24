@@ -1,13 +1,18 @@
 local class = require("middleclass")
 
+local entsByID = ents.GetByIndex
+local ipairs = ipairs
 local mathFloor = math.floor
+local next = next
 local pairs = pairs
 local setmetatable = setmetatable
 
 
 module("resource_network")
 
-local tableIsEmpty
+local function tableIsEmpty(t)
+	return next(t) ~= nil
+end
 
 local ResourceNetwork = class("ResourceNetwork")
 
@@ -53,10 +58,10 @@ function ResourceNetwork:_removeResourceStorage(ent)
 
 		if resourceTable ~= nil then
 			resourceTable.storageEnts[ent:EntIndex()] = nil
-		end
 
-		if tableIsEmpty(resourceTable) then
-			self.resources[resourceType] = nil
+			if tableIsEmpty(resourceTable) then
+				self.resources[resourceType] = nil
+			end
 		end
 	end
 end
@@ -77,7 +82,7 @@ function ResourceNetwork:injectResource(resourceType, amount)
 	local totalStored = 0
 
 	for entID in pairs(resourceTable.storageEnts) do
-		local ent = ents.GetByIndex(entID)
+		local ent = entsByID(entID)
 
 		local stored = ent:StoreResource(resourceType, amount)
 		totalStored = totalStored + stored
@@ -110,7 +115,7 @@ function ResourceNetwork:consumeResource(resourceType, amount)
 	local foundIn = {}
 
 	for entID in pairs(resourceTable.storageEnts) do
-		local ent = ents.GetByIndex(entID)
+		local ent = entsByID(entID)
 		local currentlyStored = ent["Get" .. resourceType](ent)
 		if currentlyStored > 0 then
 			totalFound = totalFound + currentlyStored
@@ -127,7 +132,7 @@ function ResourceNetwork:consumeResource(resourceType, amount)
 	end
 
 	for _, ent in ipairs(foundIn) do
-		amount = amount - ent:ConsumeResource(resourceType, amount)
+		amount = amount - ent:PullResource(resourceType, amount)
 		if amount <= 0 then
 			return true
 		end
@@ -136,8 +141,8 @@ function ResourceNetwork:consumeResource(resourceType, amount)
 	return false
 end
 
-local function tableIsEmpty(t)
-	return next(t) ~= nil
+function ResourceNetwork:__tostring()
+	return "ResourceNetwork [" .. self.id .. "]"
 end
 
 return ResourceNetwork

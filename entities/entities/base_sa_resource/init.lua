@@ -15,8 +15,18 @@ function ENT:GenerateResource(name, amtPerSec)
 	if self.resourceNetwork == nil then
 		return
 	end
+
 	local amt = amtPerSec * self.thinkTime
-	self.resourceNetwork:insertResource(name, amt)
+	self.resourceNetwork:injectResource(name, amt)
+end
+
+function ENT:ConsumeResource(name, amtPerSec)
+	if self.resourceNetwork == nil then
+		return false
+	end
+
+	local amt = amtPerSec * self.thinkTime
+	return self.resourceNetwork:consumeResource(name, amt)
 end
 
 -- cache for performance
@@ -31,7 +41,7 @@ function ENT:StoreResource(resourceType, amount)
 	return willStore
 end
 
-function ENT:ConsumeResource(resourceType, amount)
+function ENT:PullResource(resourceType, amount)
 	local currentlyStored = self["Get" .. resourceType](self)
 
 	local willConsume = mathMin(currentlyStored, amount)
@@ -52,7 +62,7 @@ function ENT:ResourceLink(target)
 	if self.resourceNetwork == nil and target.resourceNetwork == nil then
 		-- neither resource has a network, create a new network and join them
 
-		local network = resource_network()
+		local network = resource_network:new()
 
 		self:JoinNetwork(network)
 		target:JoinNetwork(network)
