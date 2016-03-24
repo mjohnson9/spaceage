@@ -1,5 +1,5 @@
 function ENT:Initialize()
-	self:SetModel("models/props_borealis/bluebarrel001.mdl")
+	self:SetModel("models/ce_ls3additional/resource_tanks/resource_tank_small.mdl")
 
 	self.BaseClass.Initialize(self)
 end
