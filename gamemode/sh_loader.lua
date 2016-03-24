@@ -25,11 +25,15 @@ do
 
 	local existingPaths = string.Split(package.path, ";")
 
+	local newPaths = ""
+
 	for _, path in ipairs(ourPaths) do
 		if not table.HasValue(existingPaths, path) then
-			package.path = package.path .. ";" .. path
+			newPaths = newPaths .. path .. ";"
 		end
 	end
+
+	package.path = newPaths .. package.path
 end
 
 local hooksMT = {}
