@@ -6,7 +6,9 @@ ENT.RenderPosition = Vector(20, -11.6, 26)
 function ENT:GetPanelPos()
 	local pos = self:LocalToWorld(self.RenderPosition)
 	local ang = self:GetAngles()
-	return pos, Angle(ang[1], ang[2] + 90, ang[3] + 90), 0.13
+	ang:RotateAroundAxis(ang:Up(), 90)
+	ang:RotateAroundAxis(ang:Forward(), 90)
+	return pos, ang, 0.13
 end
 
 function ENT:CreatePanel()
