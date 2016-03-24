@@ -31,6 +31,15 @@ function ENT:StoreResource(resourceType, amount)
 	return willStore
 end
 
+function ENT:ConsumeResource(resourceType, amount)
+	local currentlyStored = self["Get" .. resourceType](self)
+
+	local willConsume = mathMin(currentlyStored, amount)
+	self["Set" .. resourceType](self, currentlyStored - willConsume)
+
+	return willConsume
+end
+
 function ENT:GetResourceNetwork()
 	return self.resourceNetwork
 end
