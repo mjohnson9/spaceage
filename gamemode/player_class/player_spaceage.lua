@@ -8,8 +8,8 @@ local PLAYER = {}
 function PLAYER:SetupDataTables()
 	BaseClass.SetupDataTables(self)
 
-	hook.Call("SetupPlayerDatatables", GAMEMODE or GM, self.Player)
-	hook.Call("PostSetupPlayerDatatables", GAMEMODE or GM, self.Player)
+	hook.Run("SetupPlayerDatatables", self.Player)
+	hook.Run("PostSetupPlayerDatatables", self.Player)
 end
 
 player_manager.RegisterClass("player_spaceage", PLAYER, "player_sandbox")
