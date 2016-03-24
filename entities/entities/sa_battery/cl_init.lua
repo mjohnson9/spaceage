@@ -1,12 +1,12 @@
 include("info.lua")
 include("shared.lua")
 
-ENT.RenderPosition = Vector(-9, 9.1, 66)
+ENT.RenderPosition = Vector(-18, 16, 66)
 
 function ENT:GetPanelPos()
 	local pos = self:LocalToWorld(self.RenderPosition)
 	local ang = self:GetAngles()
-	return pos, ang, 0.1
+	return pos, ang, 0.2
 end
 
 function ENT:CreatePanel()
