@@ -190,6 +190,7 @@ function loader.addClientFiles()
 	-- TODO: Remove this once the author of the EVE model pack fixes their addon
 	-- See: https://steamcommunity.com/sharedfiles/filedetails/comments/148070174
 	resource.AddWorkshop("148070174") -- EVE Online ls3 addon
+	resource.AddWorkshop("429945312") -- LS3 Content Pack
 
 	-- this is the folder where all of our extensions are
 	local extensionFolder = GM.FolderName .. "/gamemode/extensions"
