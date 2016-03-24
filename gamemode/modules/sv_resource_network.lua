@@ -91,6 +91,51 @@ function ResourceNetwork:injectResource(resourceType, amount)
 	return totalStored
 end
 
+---
+-- Consumes a resource from the network
+-- @param resourceType the type of resource to consume
+-- @param amount how much of the resource to consume
+-- @return whether or not enough resource exists to be consumed
+function ResourceNetwork:consumeResource(resourceType, amount)
+	local resourceTable = self.resources[resourceType]
+
+	if resourceTable == nil then
+		return false
+	end
+
+	amount = mathFloor(amount)
+
+	-- check if the resource is available before consuming it
+	local totalFound = 0
+	local foundIn = {}
+
+	for entID in pairs(resourceTable.storageEnts) do
+		local ent = ents.GetByIndex(entID)
+		local currentlyStored = ent["Get" .. resourceType](ent)
+		if currentlyStored > 0 then
+			totalFound = totalFound + currentlyStored
+			foundIn[#foundIn + 1] = ent
+
+			if totalFound >= amount then
+				break
+			end
+		end
+	end
+
+	if totalFound < amount then
+		return false
+	end
+
+	for _, ent in ipairs(foundIn) do
+		amount = amount - ent:ConsumeResource(resourceType, amount)
+		if amount <= 0 then
+			return true
+		end
+	end
+
+	return false
+end
+
 local function tableIsEmpty(t)
 	return next(t) ~= nil
 end
