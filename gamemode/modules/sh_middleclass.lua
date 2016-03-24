@@ -1,7 +1,5 @@
 local setmetatable = setmetatable
 
-module('middleclass')
-
 local middleclass = {
   _VERSION     = 'middleclass v4.0.0',
   _DESCRIPTION = 'Object Orientation for Lua',

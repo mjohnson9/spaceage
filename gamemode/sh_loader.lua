@@ -7,67 +7,28 @@ loader = {}
 local include = include
 local AddCSLuaFile = AddCSLuaFile
 
--- store the old require function
---local oldRequire = require
+include("sh_replacement_require.lua")
+AddCSLuaFile("sh_replacement_require.lua")
 
--- override require with a new version that searches our gamemode's modules
--- folder
---[[function require(name, ...)
-	if package.loaded[name] then
-		return package.loaded[name]
-	end
+do
+	local ourPaths = {
+		GM.FolderName .. "/gamemode/modules/sh_?.lua",
+	}
 
-	local modulePath = (GM or GAMEMODE).FolderName .. "/gamemode/modules"
-
-	local sharedPath = modulePath .. "/sh_" .. name .. ".lua"
-	if file.Exists(sharedPath, "LUA") then
-		include(sharedPath)
-		return package.loaded[name]
-	end
-
-	local contextPath
 	if SERVER then
-		contextPath = modulePath .. "/sv_" .. name .. ".lua"
-	else
-		contextPath = modulePath .. "/cl_" .. name .. ".lua"
+		table.insert(ourPaths, GM.FolderName .. "/gamemode/modules/sv_?.lua")
 	end
 
-	if file.Exists(contextPath, "LUA") then
-		include(contextPath)
-		return package.loaded[name]
+	if CLIENT then
+		table.insert(ourPaths, GM.FolderName .. "/gamemode/modules/cl_?.lua")
 	end
 
-	return oldRequire(name, ...)
-end]]
+	local existingPaths = string.Split(package.path, ";")
 
-local function requireLoader(name, path)
-	local ret = include(path)
-	if ret ~= nil then
-		print("Got return loading", path, ":", ret)
-		return ret
-	end
-
-	return package.loaded[name]
-end
-
-local function requireSearcher(name)
-	local modulePath = (GM or GAMEMODE).FolderName .. "/gamemode/modules"
-
-	local sharedPath = modulePath .. "/sh_" .. name .. ".lua"
-	if file.Exists(sharedPath, "LUA") then
-		include(sharedPath)
-		return requireLoader, sharedPath
-	end
-
-	local contextPath
-	if SERVER then
-		contextPath = modulePath .. "/sv_" .. name .. ".lua"
-	else
-		contextPath = modulePath .. "/cl_" .. name .. ".lua"
-	end
-
-	if file.Exists(contextPath, "LUA") then
-		return requireLoader, contextPath
+	for _, path in ipairs(ourPaths) do
+		if not table.HasValue(existingPaths, path) then
+			package.path = package.path .. ";" .. path
+		end
 	end
 end
 
@@ -181,22 +142,6 @@ function loader.loadExtensions(context)
 	for _, thirdpartyFile in SortedPairs(file.Find(thirdpartyFolder .. "/" .. prefix .. "_*.lua", "LUA"), true) do
 		MsgN("[LOADER] Loading third party library: " .. thirdpartyFile)
 		include(thirdpartyFolder .. "/" .. thirdpartyFile)
-	end
-
-	local modulesFolder = GM.FolderName .. "/gamemode/modules"
-
-	for _, moduleFile in SortedPairs(file.Find(modulesFolder .. "/sh_*.lua", "LUA"), true) do
-		local moduleName = string.match(moduleFile, "^sh_(.*)%.lua$")
-		local path = modulesFolder .. "/" .. moduleFile
-		package.preload[moduleName] = CompileFile(path)
-		MsgN("[LOADER] Module " .. moduleName .. " preloaded")
-	end
-
-	for _, moduleFile in SortedPairs(file.Find(modulesFolder .. "/" .. prefix .. "_*.lua", "LUA"), true) do
-		local moduleName = string.match(moduleFile, "^" .. prefix .. "_(.*)%.lua$")
-		local path = modulesFolder .. "/" .. moduleFile
-		package.preload[moduleName] = CompileFile(path)
-		MsgN("[LOADER] Module " .. moduleName .. " preloaded")
 	end
 
 	for _, folder in SortedPairs(extensionFolders, true) do
