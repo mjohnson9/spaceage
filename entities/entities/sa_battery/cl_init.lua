@@ -10,21 +10,28 @@ function ENT:GetPanelPos()
 end
 
 function ENT:CreatePanel()
-	local primaryPanel = vgui.Create("DProgress")
 
-	primaryPanel:SetPos(0, 0)
-	primaryPanel:SetSize(182, 182)
-	primaryPanel:SetFraction(0)
+	local displayContainer = vgui.Create("DPanel")
+	displayContainer:SetSize(182, 182)
+	displayContainer:SetPos(0, 0)
+	displayContainer:SetPaintBackground(false)
 
-	--[[local DLabel = vgui.Create("DLabel", primaryPanel)
-	DLabel:SetPos(10, 10)
-	DLabel:SetText("Hello, world!")
-	DLabel:SizeToContents()
-	DLabel:SetDark(1)]]
+	local energyLabel = vgui.Create("DPanel", displayContainer)
+	energyLabel.Paint = function()
+		draw.SimpleTextOutlined("Energy", "DermaDefault", 91, 40, Color(255, 255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP, 1, Color(0, 0, 0, 255))
+	end
+	local energyCountLabel = vgui.Create("DPanel", displayContainer)
+			energyCountLabel.Paint = function()
+		draw.SimpleTextOutlined(self:GetEnergy(), "DermaDefault", 91, 55, Color(255, 255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP, 1, Color(0, 0, 0, 255))
+	end
+	local energyStorageLabel = vgui.Create("DPanel", displayContainer)
+	energyStorageLabel.Paint = function()
+		draw.SimpleTextOutlined("Maxium Storage", "DermaDefault", 91, 90, Color(255, 255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP, 1, Color(0, 0, 0, 255))
+	end
+	local energyStorageCountLabel = vgui.Create("DPanel", displayContainer)
+			energyStorageCountLabel.Paint = function()
+		draw.SimpleTextOutlined(self.ResourceStorage.Energy, "DermaDefault", 91, 105, Color(255, 255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP, 1, Color(0, 0, 0, 255))
+	end
 
-	return primaryPanel
-end
-
-function ENT:UpdatePanel()
-	self.statusPanel:SetFraction(self:GetEnergy() / self.ResourceStorage.Energy)
+	return displayContainer
 end
