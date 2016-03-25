@@ -47,18 +47,3 @@ function PLAYER:ApplyPlanet(planet)
 	end
 	self:SetAreaName(planet:GetPlanetName())
 end
-
----
--- Temporary stub to make NightExcessive and IceWolf admins.
-function PLAYER:IsAdmin()
-	return self:IsSuperAdmin()
-end
-
----
--- Temporary stub to make NightExcessive and IceWolf superadmins.
-function PLAYER:IsSuperAdmin()
-	-- TODO: Remove
-
-	local steamID = self:SteamID()
-	return steamID == "STEAM_0:1:17906432" or steamID == "STEAM_0:1:5863178"
-end
