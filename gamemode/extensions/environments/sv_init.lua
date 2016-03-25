@@ -7,3 +7,10 @@ function HOOKS:PostSetupPlayerDatatables(ply)
 		ply.planetDirty = nil
 	end
 end
+
+function HOOKS:PostPlayerDeath(ply)
+	-- reset all of the player's suit resources to 0
+	ply:SetEnergy(0)
+	ply:SetOxygen(0)
+	ply:SetCoolant(0)
+end
