@@ -78,7 +78,6 @@ function ResourceNetwork:injectResource(resourceType, amount)
 		return 0
 	end
 
-	amount = mathFloor(amount)
 	local totalStored = 0
 
 	for entID in pairs(resourceTable.storageEnts) do
@@ -107,8 +106,6 @@ function ResourceNetwork:consumeResource(resourceType, amount)
 	if resourceTable == nil then
 		return false
 	end
-
-	amount = mathFloor(amount)
 
 	-- check if the resource is available before consuming it
 	local totalFound = 0
