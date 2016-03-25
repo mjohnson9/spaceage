@@ -1,7 +1,7 @@
 include("info.lua")
 include("shared.lua")
 
-ENT.RenderPosition = Vector(20, -11.6, 26)
+ENT.RenderPosition = Vector(20, -8.8, 24)
 
 function ENT:GetPanelPos()
 	local pos = self:LocalToWorld(self.RenderPosition)
@@ -14,29 +14,34 @@ end
 function ENT:CreatePanel()
 
 	local displayContainer = vgui.Create("DPanel")
-	displayContainer:SetSize(182, 182)
+	displayContainer:SetSize(135, 130)
 	displayContainer:SetPos(0, 0)
 	displayContainer:SetPaintBackground(false)
 
-	local waterLabel = vgui.Create("DPanel", displayContainer)
-	waterLabel.Paint = function()
-		draw.SimpleTextOutlined("Water", "DermaDefault", 91, 20, Color(255, 255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP, 1, Color(0, 0, 0, 255))
-	end
+	local waterLabel = vgui.Create("DLabel", displayContainer)
+	waterLabel:SetText("Water")
+	waterLabel:SetContentAlignment(5) -- middle center
+	waterLabel:Dock(TOP)
 
-	local waterCountLabel = vgui.Create("DPanel", displayContainer)
-	waterCountLabel.Paint = function()
-		draw.SimpleTextOutlined(self:GetWater(), "DermaDefault", 91, 35, Color(255, 255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP, 1, Color(0, 0, 0, 255))
-	end
+	local waterCountLabel = vgui.Create("DLabel", displayContainer)
+	waterCountLabel:SetText("0")
+	waterCountLabel:SetContentAlignment(5) -- middle center
+	waterCountLabel:Dock(TOP)
+	self.waterCountLabel = waterCountLabel
 
-	local waterStorageLabel = vgui.Create("DPanel", displayContainer)
-	waterStorageLabel.Paint = function()
-		draw.SimpleTextOutlined("Maxium Storage", "DermaDefault", 91, 115, Color(255, 255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP, 1, Color(0, 0, 0, 255))
-	end
+	local maxStorageCountLabel = vgui.Create("DLabel", displayContainer)
+	maxStorageCountLabel:SetText(self.ResourceStorage.Water)
+	maxStorageCountLabel:SetContentAlignment(5) -- middle center
+	maxStorageCountLabel:Dock(BOTTOM)
 
-	local waterStorageCountLabel = vgui.Create("DPanel", displayContainer)
-	waterStorageCountLabel.Paint = function()
-		draw.SimpleTextOutlined(self.ResourceStorage.Water, "DermaDefault", 91, 130, Color(255, 255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP, 1, Color(0, 0, 0, 255))
-	end
+	local maxStorageLabel = vgui.Create("DLabel", displayContainer)
+	maxStorageLabel:SetText("Maximum Storage")
+	maxStorageLabel:SetContentAlignment(5) -- middle center
+	maxStorageLabel:Dock(BOTTOM)
 
 	return displayContainer
+end
+
+function ENT:UpdatePanel()
+	self.waterCountLabel:SetText(self:GetWater())
 end
