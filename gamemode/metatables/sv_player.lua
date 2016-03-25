@@ -45,5 +45,6 @@ function PLAYER:ApplyPlanet(planet)
 	else
 		self:SetGravity(gravity)
 	end
+
 	self:SetAreaName(planet:GetPlanetName())
 end
