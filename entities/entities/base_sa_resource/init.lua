@@ -12,21 +12,29 @@ function ENT:ServerInitialize()
 end
 
 function ENT:GenerateResource(name, amtPerSec)
+	local amt = amtPerSec * self.thinkTime
+	return self:RawGenerateResource(name, amt)
+end
+
+function ENT:RawGenerateResource(name, amount)
 	if self.resourceNetwork == nil then
 		return
 	end
 
-	local amt = amtPerSec * self.thinkTime
-	self.resourceNetwork:injectResource(name, amt)
+	return self.resourceNetwork:injectResource(name, amount)
 end
 
 function ENT:ConsumeResource(name, amtPerSec)
+	local amt = amtPerSec * self.thinkTime
+	return self:RawConsumeResource(name, amt)
+end
+
+function ENT:RawConsumeResource(name, amount)
 	if self.resourceNetwork == nil then
 		return false
 	end
 
-	local amt = amtPerSec * self.thinkTime
-	return self.resourceNetwork:consumeResource(name, amt)
+	return self.resourceNetwork:consumeResource(name, amount)
 end
 
 -- cache for performance
