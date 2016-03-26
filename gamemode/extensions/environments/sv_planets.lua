@@ -5,6 +5,23 @@
 local SB_PLANET1_UNSTABLE = bit.lshift(1, 2)
 local SB_PLANET1_SUNBURN = bit.lshift(1, 3)]]
 
+-- use customPlanets to manually add planets to maps
+local customPlanets = {
+	sb_gooniverse_v4 = {
+		{
+			name = "Spawn Room",
+			priority = 10240,
+
+			position = Vector(-10524.900391, -5780.000000, -9453.000000),
+			shape = "cube",
+			radius = 350,
+
+			gravity = 1,
+			atmosphere = 1,
+		}
+	}
+}
+
 local function getPlanetV1(logicKV)
 	-- TODO: add support for version 1 planets
 	error("Version 1 planets are not yet supported")
@@ -59,6 +76,44 @@ local function getPlanetValues(logicCase)
 	return planetValues
 end
 
+local function createPlanet(planetValues)
+	local planet = ents.Create("sa_planet")
+
+	if not planet:IsValid() then
+		error("failed to create planet entity")
+	end
+
+	planet:SetPos(planetValues.position)
+
+	if planetValues.angle ~= nil then
+		planet:SetAngles(planetValues.angle)
+	end
+
+	if planetValues.name ~= nil then
+		planet:SetPlanetName(planetValues.name)
+	end
+
+	if planetValues.radius ~= nil then
+		planet:SetPlanetRadius(planetValues.radius)
+	end
+
+	if planetValues.gravity ~= nil then
+		planet:SetPlanetGravity(planetValues.gravity)
+	end
+
+	if planetValues.priority ~= nil then
+		planet:SetPlanetPriority(planetValues.priority)
+	end
+
+	if planetValues.shape ~= nil then
+		planet:SetPlanetShape(planetValues.shape)
+	end
+
+	planet:Spawn()
+
+	print("Created planet for " .. tostring(planetValues.name))
+end
+
 local function createPlanets()
 	local logicCases = ents.FindByClass("logic_case")
 	for _, ent in ipairs(logicCases) do
@@ -67,25 +122,14 @@ local function createPlanets()
 			continue
 		end
 
-		local planet = ents.Create("sa_planet")
+		createPlanet(planetValues)
+	end
 
-		if not planet:IsValid() then
-			print("Failed to create planet for " .. tostring(planetValues.name))
-			continue
+	local overridePlanets = customPlanets[game.GetMap()]
+	if overridePlanets ~= nil then
+		for _, overridePlanet in ipairs(overridePlanets) do
+			createPlanet(overridePlanet)
 		end
-
-		planet:SetPos(planetValues.position)
-		planet:SetAngles(planetValues.angle)
-
-		planet:SetPlanetName(planetValues.name)
-		planet:SetPlanetRadius(planetValues.radius)
-		planet:SetPlanetGravity(planetValues.gravity)
-		planet:SetPlanetPriority(planetValues.priority)
-		planet:SetPlanetShape(planetValues.shape)
-
-		planet:Spawn()
-
-		print("Created planet for " .. tostring(planetValues.name))
 	end
 end
 
