@@ -31,21 +31,21 @@ hudContainerBackground:SetSize(hudContainer:GetSize())
 hudContainerBackground:SetImage("spaceage/hud_background.png")
 
 -- Create Environment Label
-local environmentLabel = vgui.Create("DPanel", hudContainer)
-environmentLabel:SetPos(43, 5)
+local environmentLabel = vgui.Create("DLabel", hudContainer)
+environmentLabel:SetPos(34, 5)
 
 -- Create Resource Labels
-local healthLabel = vgui.Create( "DPanel", hudContainer )
-healthLabel:SetPos( 137, 90 )
+local healthLabel = vgui.Create( "DLabel", hudContainer )
+healthLabel:SetPos( 115, 88 )
 
-local energyLabel = vgui.Create( "DPanel", hudContainer )
-energyLabel:SetPos( 183, 90 )
+local energyLabel = vgui.Create( "DLabel", hudContainer )
+energyLabel:SetPos( 161, 88 )
 
-local oxygenLabel = vgui.Create( "DPanel", hudContainer )
-oxygenLabel:SetPos( 229, 90 )
+local oxygenLabel = vgui.Create( "DLabel", hudContainer )
+oxygenLabel:SetPos( 207, 88 )
 
-local coolantLabel = vgui.Create( "DPanel", hudContainer )
-coolantLabel:SetPos( 275, 90 )
+local coolantLabel = vgui.Create( "DLabel", hudContainer )
+coolantLabel:SetPos( 253, 88 )
 
 -- Create Resource Bars
 local healthBar = vgui.Create("DPanel", hudContainer)
@@ -73,37 +73,43 @@ function HOOKS:HUDPaint()
 	local playerArea = localPlayer:GetAreaName()
 	local playerHealthText = mathMax(localPlayer:Health(), 0)
 	local playerHealthPercent = mathMin(playerHealthText, 100)
-	local playerEnergyText = mathMax(localPlayer:GetEnergy(), 0)
+	local playerEnergyText = mathMax(math.Round(localPlayer:GetEnergy(), 0), 0)
 	local playerEnergyPercent = mathMin(playerEnergyText, 100)
-	local playerOxygen = localPlayer:GetOxygen()
-	local playerCoolant = localPlayer:GetCoolant()
+	local playerOxygenText = mathMax(math.Round(localPlayer:GetOxygen(), 0), 0)
+	local playerOxygenPercent = mathMin(playerOxygenText, 100)
+	local playerCoolantText = mathMax(math.Round(localPlayer:GetCoolant(), 0), 0)
+	local playerCoolantPercent = mathMin(playerCoolantText, 100)
 
 	-- Local Functions
-	local playerHealthAdjust = (62) * ((100 - playerHealthPercent) / 100)
-	local playerEnergyAdjust = (62) * ((100 - playerEnergyPercent) / 100)
-	local playerOxygenAdjust = (62) * ((100 - playerOxygen) / 100)
-	local playerCoolantAdjust = (62) * ((100 - playerCoolant) / 100)
+	local playerHealthAdjust  = (62) * ((100 - playerHealthPercent)  / 100)
+	local playerEnergyAdjust  = (62) * ((100 - playerEnergyPercent)  / 100)
+	local playerOxygenAdjust  = (62) * ((100 - playerOxygenPercent)  / 100)
+	local playerCoolantAdjust = (62) * ((100 - playerCoolantPercent) / 100)
 
 	-- Update EnvironmentLabel
-	environmentLabel.Paint = function()
-	 	draw.SimpleTextOutlined(playerArea, "DermaDefaultBold", 20, 0, colorEnvironment, TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP, 1, colorBlack)
-	 end
+	environmentLabel:SetText(playerArea)
+	environmentLabel:SetContentAlignment(5)
+
 	-- Update Resource Labels
-	healthLabel.Paint = function()
-		draw.SimpleTextOutlined(playerHealthPercent, "DermaDefaultBold", 9, 0, colorHealth, TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP, 1, colorBlack)
-	end
+	healthLabel:SetText(playerHealthPercent)
+	healthLabel:SetFont("DermaDefaultBold")
+	healthLabel:SetContentAlignment(5)
+	healthLabel:SetColor(colorHealth)
 
-	energyLabel.Paint = function()
-		draw.SimpleTextOutlined(playerEnergyPercent, "DermaDefaultBold", 10, 0, colorEnergy, TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP, 1, colorBlack)
-	end
+	energyLabel:SetText(playerEnergyPercent)
+	energyLabel:SetFont("DermaDefaultBold")
+	energyLabel:SetContentAlignment(5)
+	energyLabel:SetColor(colorEnergy)
 
-	oxygenLabel.Paint = function()
-		draw.SimpleTextOutlined(playerOxygen, "DermaDefaultBold", 10, 0, colorOxygen, TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP, 1, colorBlack)
-	end
+	oxygenLabel:SetText(playerOxygenPercent)
+	oxygenLabel:SetFont("DermaDefaultBold")
+	oxygenLabel:SetContentAlignment(5)
+	oxygenLabel:SetColor(colorOxygen)
 
-	coolantLabel.Paint = function()
-		draw.SimpleTextOutlined(playerCoolant, "DermaDefaultBold", 10, 0, colorCoolant, TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP, 1, colorBlack)
-	end
+	coolantLabel:SetText(playerCoolantPercent)
+	coolantLabel:SetFont("DermaDefaultBold")
+	coolantLabel:SetContentAlignment(5)
+	coolantLabel:SetColor(colorCoolant)
 
 	-- Update Resource Bars
 	healthBar:SetSize(27, playerHealthAdjust)
