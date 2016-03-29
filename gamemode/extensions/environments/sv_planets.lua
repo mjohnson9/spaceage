@@ -118,11 +118,9 @@ local function createPlanets()
 	local logicCases = ents.FindByClass("logic_case")
 	for _, ent in ipairs(logicCases) do
 		local planetValues = getPlanetValues(ent)
-		if planetValues == nil then
-			continue
+		if planetValues ~= nil then
+			createPlanet(planetValues)
 		end
-
-		createPlanet(planetValues)
 	end
 
 	local overridePlanets = customPlanets[game.GetMap()]
