@@ -1,0 +1,7 @@
+before_script:
+  - apt-get update -qq && apt-get install -y -qq lua5.1
+  - lua5.1 -v
+
+check-syntax:
+  stage: build
+  script: .ci-scripts/check-syntax.sh
