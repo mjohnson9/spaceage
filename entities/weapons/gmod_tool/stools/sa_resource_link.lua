@@ -8,7 +8,16 @@ if CLIENT then
 	language.Add("tool.sa_resource_link.0", "Left click on a resource node to select it.")
 	language.Add("tool.sa_resource_link.1", "Left click on another resource node to link it.")
 
-	language.Add("Undone_sa_resource_link", "Undone Resource Link")
+	language.Add("Undone_Resource Link", "Undone Resource Link")
+end
+
+local function undoLink(_, source, target)
+	if not source:IsInNetwork(target) then
+		return
+	end
+
+	local network = source:GetNetwork()
+	network:removeLink(source, target)
 end
 
 function TOOL:LeftClick(trace)
@@ -52,7 +61,14 @@ function TOOL:LeftClick(trace)
 
 			local ropeLength = sourceWorldPos:Distance(targetWorldPos)
 
-			constraint.Rope(source, target, sourceBone, targetBone, sourceLocalPos, targetLocalPos, ropeLength, 32, 0, 1.5, "cable/cable2", false)
+			local constraint, rope = constraint.Rope(source, target, sourceBone, targetBone, sourceLocalPos, targetLocalPos, ropeLength, 32, 0, 1.5, "cable/cable2", false)
+
+			undo.Create("Resource Link")
+				undo.AddEntity(constraint)
+				undo.AddEntity(rope)
+				undo.AddFunction(undoLink, source, target)
+				undo.SetPlayer(self:GetOwner())
+			undo.Finish()
 		end
 
 		self:SetStage(0)
