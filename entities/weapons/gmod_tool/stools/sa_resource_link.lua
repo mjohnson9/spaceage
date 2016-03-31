@@ -12,8 +12,6 @@ if CLIENT then
 end
 
 local function undoLink(_, source, target)
-	print("undoLink", source, target)
-
 	if not source:IsInNetwork(target) then
 		return
 	end
