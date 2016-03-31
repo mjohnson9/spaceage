@@ -2,7 +2,6 @@ local class = require("middleclass")
 
 local entsByID = ents.GetByIndex
 local ipairs = ipairs
-local mathFloor = math.floor
 local next = next
 local pairs = pairs
 local setmetatable = setmetatable
