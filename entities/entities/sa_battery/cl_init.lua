@@ -40,6 +40,8 @@ function ENT:CreatePanel()
 	return displayContainer
 end
 
+local mathRound = math.Round
+
 function ENT:UpdatePanel()
-	self.energyCountLabel:SetText(self:GetEnergy())
+	self.energyCountLabel:SetText(mathRound(self:GetEnergy()))
 end
