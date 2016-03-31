@@ -17,11 +17,12 @@ function ENT:GenerateResource(name, amtPerSec)
 end
 
 function ENT:RawGenerateResource(name, amount)
-	if self.resourceNetwork == nil then
+	local ourNetwork = self:GetNetwork()
+	if ourNetwork == nil then
 		return
 	end
 
-	return self.resourceNetwork:injectResource(name, amount)
+	return ourNetwork:injectResource(name, amount)
 end
 
 function ENT:ConsumeResource(name, amtPerSec)
@@ -30,11 +31,12 @@ function ENT:ConsumeResource(name, amtPerSec)
 end
 
 function ENT:RawConsumeResource(name, amount)
-	if self.resourceNetwork == nil then
+	local ourNetwork = self:GetNetwork()
+	if ourNetwork == nil then
 		return false
 	end
 
-	return self.resourceNetwork:consumeResource(name, amount)
+	return ourNetwork:consumeResource(name, amount)
 end
 
 -- cache for performance
@@ -58,69 +60,56 @@ function ENT:PullResource(resourceType, amount)
 	return willConsume
 end
 
-function ENT:GetResourceNetwork()
-	return self.resourceNetwork
-end
-
 function ENT:IsInNetwork(target)
-	return self.resourceNetwork ~= nil and self.resourceNetwork == target.resourceNetwork
+	local network = self:GetNetwork()
+	return network ~= nil and network == target:GetNetwork()
 end
 
 function ENT:ResourceLink(target)
-	if self.resourceNetwork == nil and target.resourceNetwork == nil then
-		-- neither resource has a network, create a new network and join them
+	local ourNetwork = self:GetNetwork()
+	local targetNetwork = target:GetNetwork()
 
-		local network = resource_network:new()
-
-		self:JoinNetwork(network)
-		target:JoinNetwork(network)
-
+	if ourNetwork == nil and targetNetwork == nil then
+		-- neither resource has a network, create a new network and add a link
+		ourNetwork = resource_network:new(self)
+		ourNetwork:addLink(self, target)
 		return
 	end
 
-	if self.resourceNetwork == nil and target.resourceNetwork ~= nil then
-		-- the target has a network and we don't, just join
-
-		self:JoinNetwork(target.resourceNetwork)
-
+	if ourNetwork == nil and targetNetwork ~= nil then
+		-- the target has a network and we don't, just link into their network
+		targetNetwork:addLink(target, self)
 		return
 	end
 
-	if self.resourceNetwork ~= nil and target.resourceNetwork == nil then
-		-- we have a network and the target doesn't, just join them
-
-		target:JoinNetwork(self.resourceNetwork)
-
+	if ourNetwork ~= nil and targetNetwork == nil then
+		-- we have a network and the target doesn't, just add them to ours
+		ourNetwork:addLink(self, target)
 		return
 	end
 
-	-- Remaining case: merging two networks
-
-	error("not yet implemented")
+	-- both entities have networks, merge the two
+	ourNetwork:addLink(self, target)
 end
 
-function ENT:JoinNetwork(network)
-	if self.resourceNetwork == network then
-		-- we're already in this network
-		return
-	end
-
-	if self.resourceNetwork ~= nil then
-		self.resourceNetwork:removeResource(self)
-	end
+function ENT:SetNetwork(network)
+	self._resourceNetwork = network
 
 	if network == nil then
-		self.resourceNetwork = nil
 		self:SetNetworkID(0)
 		return
 	end
 
-	self.resourceNetwork = network
-	self.resourceNetwork:addResource(self)
+	self:SetNetworkID(network.id)
+end
 
-	self:SetNetworkID(self.resourceNetwork.id)
+function ENT:GetNetwork()
+	return self._resourceNetwork
 end
 
 function ENT:OnRemove()
-	self:JoinNetwork(nil) -- leave our current network
+	local ourNetwork = self:GetNetwork()
+	if ourNetwork ~= nil then
+		ourNetwork:entityRemoved(self) -- leave our current network
+	end
 end
