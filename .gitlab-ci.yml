@@ -1,7 +1,21 @@
-before_script:
-  - apt-get update -qq && apt-get install -y -qq lua5.1
-  - lua5.1 -v
-
 check-syntax:
   stage: build
-  script: .ci-scripts/check-syntax.sh
+  script:
+    - apt-get update -qq && apt-get install -y -qq lua5.1
+    - lua5.1 -v
+    - .ci-scripts/check-syntax.sh
+
+glualint:
+  stage: build
+  script:
+    - apt-get update -qq && apt-get install -y -qq unzip curl ca-certificates libgmp10
+    - .ci-scripts/download-glualint.sh
+    - .ci-scripts/glualint.sh
+
+package-workshop:
+  stage: deploy
+  when: always
+  artifacts:
+    paths:
+      - workshop-content/
+  script: .ci-scripts/workshop-package.sh
