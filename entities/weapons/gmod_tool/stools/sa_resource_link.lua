@@ -12,6 +12,8 @@ if CLIENT then
 end
 
 local function undoLink(_, source, target)
+	print("undoLink", source, target)
+
 	if not source:IsInNetwork(target) then
 		return
 	end
@@ -48,8 +50,6 @@ function TOOL:LeftClick(trace)
 		end
 
 		if SERVER then
-			source:ResourceLink(target)
-
 			local sourceBone = self:GetBone(1)
 			local targetBone = self:GetBone(2)
 
@@ -61,10 +61,18 @@ function TOOL:LeftClick(trace)
 
 			local ropeLength = sourceWorldPos:Distance(targetWorldPos)
 
-			local constraint, rope = constraint.Rope(source, target, sourceBone, targetBone, sourceLocalPos, targetLocalPos, ropeLength, 32, 0, 1.5, "cable/cable2", false)
+			local ropeConstraint, rope = constraint.Rope(source, target, sourceBone, targetBone, sourceLocalPos, targetLocalPos, ropeLength, 32, 0, 1.5, "cable/cable2", false)
+
+			if not ropeConstraint then
+				return false
+			end
+
+			ropeConstraint:CallOnRemove("saResourceLink", undoLink, source, target)
+
+			source:ResourceLink(target)
 
 			undo.Create("Resource Link")
-				undo.AddEntity(constraint)
+				undo.AddEntity(ropeConstraint)
 				undo.AddEntity(rope)
 				undo.AddFunction(undoLink, source, target)
 				undo.SetPlayer(self:GetOwner())
