@@ -15,7 +15,7 @@ for filepath in $(find . -type f -iname '*.lua' -not -iwholename '*.git*'); do
 	if [ $status -eq 0 ]; then
 		cat "${TEMP_FILE}" > "${filepath}"
 		# glualint doesn't print the trailing newline
-		echo > "${filepath}"
+		echo >> "${filepath}"
 		echo "Formatted ${filepath}"
 	else
 		echo "Failed to format ${filepath}"
