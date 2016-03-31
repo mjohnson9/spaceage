@@ -42,6 +42,8 @@ function ENT:CreatePanel()
 	return displayContainer
 end
 
+local mathRound = math.Round
+
 function ENT:UpdatePanel()
-	self.waterCountLabel:SetText(self:GetWater())
+	self.waterCountLabel:SetText(mathRound(self:GetWater()))
 end

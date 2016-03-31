@@ -40,6 +40,8 @@ function ENT:CreatePanel()
 	return displayContainer
 end
 
+local mathRound = math.Round
+
 function ENT:UpdatePanel()
-	self.hydrogenCountLabel:SetText(self:GetHydrogen())
+	self.hydrogenCountLabel:SetText(mathRound(self:GetHydrogen()))
 end
