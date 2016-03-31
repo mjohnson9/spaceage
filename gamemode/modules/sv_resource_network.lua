@@ -12,7 +12,7 @@ local tableRemove = table.remove
 module("resource_network")
 
 local function tableIsEmpty(t)
-	return next(t) ~= nil
+	return next(t) == nil
 end
 
 local ResourceNetwork = class("ResourceNetwork")
