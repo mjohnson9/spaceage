@@ -1,7 +1,5 @@
 #!/bin/sh
 
-set -e
-
 # Base directory
 echo "-- Creating content directory"
 mkdir -p workshop-content
