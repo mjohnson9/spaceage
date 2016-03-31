@@ -21,6 +21,3 @@ The `develop` branch is where development happens. If you'd like to create a bra
 Note that force pushes are forbidden on both develop and master.
 
 Code is merged from develop to master via pull requests. Whenever a merge occurs, a version should be tagged at the `HEAD` of `master`.
-
-## Miscellaneous Tools
-Some contributors to this project use ZenHub, as seen in issue #14.
