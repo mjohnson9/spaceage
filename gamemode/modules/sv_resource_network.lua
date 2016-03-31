@@ -124,7 +124,7 @@ function ResourceNetwork:_addResource(ent)
 end
 
 function ResourceNetwork:_addResourceStorage(ent)
-	for resourceType, availableStorage in pairs(ent.ResourceStorage) do
+	for resourceType in pairs(ent.ResourceStorage) do
 		local resourceTable = self.resources[resourceType]
 
 		if resourceTable == nil then
@@ -146,7 +146,7 @@ function ResourceNetwork:_removeResource(ent)
 end
 
 function ResourceNetwork:_removeResourceStorage(ent)
-	for resourceType, availableStorage in pairs(ent.ResourceStorage) do
+	for resourceType in pairs(ent.ResourceStorage) do
 		local resourceTable = self.resources[resourceType]
 
 		if resourceTable ~= nil then
