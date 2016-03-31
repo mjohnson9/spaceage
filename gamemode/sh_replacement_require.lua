@@ -48,10 +48,7 @@ function require(name)
 	end
 
 	if loader == nil then
-		local errorReason = "module '" .. tostring(name) .. "' not found:"
-		for _, reason in ipairs(reasons) do
-			errorReason = errorReason .. reason
-		end
+		local errorReason = "module '" .. tostring(name) .. "' not found:" .. table.concat(reasons)
 
 		error(errorReason)
 	end
