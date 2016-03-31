@@ -8,7 +8,7 @@ mkdir -p workshop-content
 
 # LICENSE
 echo "-- Copying license..."
-cp -auv LICENSE workshop-content/
+cp -auv LICENSE.md workshop-content/LICENSE
 
 # Maps
 echo "-- Copying maps..."
