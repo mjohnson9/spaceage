@@ -1,10 +1,6 @@
 -- Copyright (C) Charles Leasure, Mark Dietzer, and Michael Johnson d.b.a SpaceAge - All Rights Reserved
 -- See LICENSE file for more information.
 
-if _G.hud ~= nil and _G.hud:IsValid() then
-	_G.hud:Remove()
-end
-
 -- cache global functions to prevent global table lookups every frame
 local ScrH = ScrH
 
@@ -13,8 +9,6 @@ hud:SetPos(5, ScrH() - 122)
 hud:SizeToContents()
 
 hud:ParentToHUD()
-
-_G.hud = hud
 
 -- cache the local player
 local localPlayer = LocalPlayer()
