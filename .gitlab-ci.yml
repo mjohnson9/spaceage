@@ -19,3 +19,11 @@ package-workshop:
     paths:
       - workshop-content/
   script: .ci-scripts/workshop-package.sh
+
+package-server:
+  stage: deploy
+  when: always
+  artifacts:
+    paths:
+      - server.tar
+  script: .ci-scripts/server-package.sh
