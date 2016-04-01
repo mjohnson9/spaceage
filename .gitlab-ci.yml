@@ -25,5 +25,6 @@ package-server:
   when: always
   artifacts:
     paths:
+      - apt-get update -qq && apt-get install -y -qq git
       - server.tar
   script: .ci-scripts/server-package.sh
