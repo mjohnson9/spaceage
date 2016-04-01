@@ -1,0 +1,18 @@
+# Ignore these files in our release exports
+/.ci-scripts		export-ignore
+
+/.editorconfig		export-ignore
+/.gitattributes		export-ignore
+/.gitignore			export-ignore
+/.gitlab-ci.yml		export-ignore
+/.glualint.json		export-ignore
+/CONTRIBUTING.md	export-ignore
+/README.md			export-ignore
+
+/content/maps/.gitignore	export-ignore
+
+/gamemode/.gitattributes		export-ignore
+/gamemode/README.md				export-ignore
+/gamemode/extensions/README.md	export-ignore
+
+/*.svg				export-ignore
