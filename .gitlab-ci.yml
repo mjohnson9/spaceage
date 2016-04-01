@@ -20,12 +20,11 @@ package-workshop:
       - workshop-content/
   script: .ci-scripts/workshop-package.sh
 
-package-server:
+deploy-server:
   stage: deploy
-  when: always
-  artifacts:
-    paths:
-      - server.tar
   script:
-    - apt-get update -qq && apt-get install -y -qq git
+    - apt-get update -qq && apt-get install -y -qq git rsync openssh-client
     - .ci-scripts/server-package.sh
+    - .ci-scripts/server-deploy.sh DEVELOP
+  only:
+    - develop
