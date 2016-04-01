@@ -22,6 +22,9 @@ package-workshop:
 
 deploy-server:
   stage: deploy
+  artifacts:
+    paths:
+      - server-content/
   script:
     - apt-get update -qq && apt-get install -y -qq git rsync openssh-client
     - .ci-scripts/server-package.sh

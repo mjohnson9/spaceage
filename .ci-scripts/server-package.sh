@@ -1,3 +1,3 @@
 #!/bin/sh
 
-git archive --output server.tar HEAD
+git archive --format tar HEAD | tar -x -C server-content
