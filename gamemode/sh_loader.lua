@@ -138,12 +138,12 @@ function loader.loadExtensions(context)
 
 	local thirdpartyFolder = GM.FolderName .. "/gamemode/lib"
 
-	for _, thirdpartyFile in SortedPairs(file.Find(thirdpartyFolder .. "/sh_*.lua", "LUA"), true) do
+	for _, thirdpartyFile in SortedPairs(file.Find(thirdpartyFolder .. "/sh_*.lua", "LUA")) do
 		MsgN("[LOADER] Loading third party library: " .. thirdpartyFile)
 		include(thirdpartyFolder .. "/" .. thirdpartyFile)
 	end
 
-	for _, thirdpartyFile in SortedPairs(file.Find(thirdpartyFolder .. "/" .. prefix .. "_*.lua", "LUA"), true) do
+	for _, thirdpartyFile in SortedPairs(file.Find(thirdpartyFolder .. "/" .. prefix .. "_*.lua", "LUA")) do
 		MsgN("[LOADER] Loading third party library: " .. thirdpartyFile)
 		include(thirdpartyFolder .. "/" .. thirdpartyFile)
 	end
@@ -152,13 +152,13 @@ function loader.loadExtensions(context)
 		MsgN("[LOADER] Loading extension \"" .. folder .. "\"")
 
 		-- always load shared extensions first
-		for _, sharedFile in SortedPairs(file.Find(extensionFolder .. "/" .. folder .. "/sh_*.lua", "LUA"), true) do
+		for _, sharedFile in SortedPairs(file.Find(extensionFolder .. "/" .. folder .. "/sh_*.lua", "LUA")) do
 			MsgN("\t" .. sharedFile)
 			loadExtension(extensionFolder .. "/" .. folder .. "/" .. sharedFile)
 		end
 
 		-- now load based on context
-		for _, contextFile in SortedPairs(file.Find(extensionFolder .. "/" .. folder .. "/" .. prefix .. "_*.lua", "LUA"), true) do
+		for _, contextFile in SortedPairs(file.Find(extensionFolder .. "/" .. folder .. "/" .. prefix .. "_*.lua", "LUA")) do
 			MsgN("\t" .. contextFile)
 			loadExtension(extensionFolder .. "/" .. folder .. "/" .. contextFile)
 		end
@@ -166,19 +166,19 @@ function loader.loadExtensions(context)
 
 	local playerClassFolder = GM.FolderName .. "/gamemode/player_class"
 
-	for _, playerClass in SortedPairs(file.Find(playerClassFolder .. "/*.lua", "LUA"), true) do
+	for _, playerClass in SortedPairs(file.Find(playerClassFolder .. "/*.lua", "LUA")) do
 		MsgN("Loading player class: " .. playerClass)
 		include(playerClassFolder .. "/" .. playerClass)
 	end
 
 	local metatablesFolder = GM.FolderName .. "/gamemode/metatables"
 
-	for _, metatableFile in SortedPairs(file.Find(metatablesFolder .. "/sh_*.lua", "LUA"), true) do
+	for _, metatableFile in SortedPairs(file.Find(metatablesFolder .. "/sh_*.lua", "LUA")) do
 		MsgN("[LOADER] Loading metatable: " .. metatableFile)
 		include(metatablesFolder .. "/" .. metatableFile)
 	end
 
-	for _, metatableFile in SortedPairs(file.Find(metatablesFolder .. "/" .. prefix .. "_*.lua", "LUA"), true) do
+	for _, metatableFile in SortedPairs(file.Find(metatablesFolder .. "/" .. prefix .. "_*.lua", "LUA")) do
 		MsgN("[LOADER] Loading metatable: " .. metatableFile)
 		include(metatablesFolder .. "/" .. metatableFile)
 	end
@@ -197,16 +197,16 @@ function loader.addClientFiles()
 
 	local _, extensionFolders = file.Find(extensionFolder .. "/*", "LUA")
 
-	for _, folder in SortedPairs(extensionFolders, true) do
+	for _, folder in SortedPairs(extensionFolders) do
 		MsgN("[LOADER] Adding client extension: " .. folder)
 		-- add shared files first
-		for _, sharedFile in SortedPairs(file.Find(extensionFolder .. "/" .. folder .. "/sh_*.lua", "LUA"), true) do
+		for _, sharedFile in SortedPairs(file.Find(extensionFolder .. "/" .. folder .. "/sh_*.lua", "LUA")) do
 			AddCSLuaFile(extensionFolder .. "/" .. folder .. "/" .. sharedFile)
 			MsgN("\t" .. sharedFile)
 		end
 
 		-- add client files second
-		for _, contextFile in SortedPairs(file.Find(extensionFolder .. "/" .. folder .. "/cl_*.lua", "LUA"), true) do
+		for _, contextFile in SortedPairs(file.Find(extensionFolder .. "/" .. folder .. "/cl_*.lua", "LUA")) do
 			AddCSLuaFile(extensionFolder .. "/" .. folder .. "/" .. contextFile)
 			MsgN("\t" .. contextFile)
 		end
@@ -214,7 +214,7 @@ function loader.addClientFiles()
 
 	local playerClassFolder = GM.FolderName .. "/gamemode/player_class"
 
-	for _, playerClass in SortedPairs(file.Find(playerClassFolder .. "/*.lua", "LUA"), true) do
+	for _, playerClass in SortedPairs(file.Find(playerClassFolder .. "/*.lua", "LUA")) do
 		local path = playerClassFolder .. "/" .. playerClass
 		AddCSLuaFile(path)
 		MsgN("[LOADER] Client file added: " .. path)
@@ -222,13 +222,13 @@ function loader.addClientFiles()
 
 	local modulesFolder = GM.FolderName .. "/gamemode/modules"
 
-	for _, moduleFile in SortedPairs(file.Find(modulesFolder .. "/sh_*.lua", "LUA"), true) do
+	for _, moduleFile in SortedPairs(file.Find(modulesFolder .. "/sh_*.lua", "LUA")) do
 		local path = modulesFolder .. "/" .. moduleFile
 		AddCSLuaFile(path)
 		MsgN("[LOADER] Client file added: " .. path)
 	end
 
-	for _, moduleFile in SortedPairs(file.Find(modulesFolder .. "/cl_*.lua", "LUA"), true) do
+	for _, moduleFile in SortedPairs(file.Find(modulesFolder .. "/cl_*.lua", "LUA")) do
 		local path = modulesFolder .. "/" .. moduleFile
 		AddCSLuaFile(path)
 		MsgN("[LOADER] Client file added: " .. path)
@@ -236,13 +236,13 @@ function loader.addClientFiles()
 
 	local metatablesFolder = GM.FolderName .. "/gamemode/metatables"
 
-	for _, metatableFile in SortedPairs(file.Find(metatablesFolder .. "/sh_*.lua", "LUA"), true) do
+	for _, metatableFile in SortedPairs(file.Find(metatablesFolder .. "/sh_*.lua", "LUA")) do
 		local path = metatablesFolder .. "/" .. metatableFile
 		AddCSLuaFile(path)
 		MsgN("[LOADER] Client file added: " .. path)
 	end
 
-	for _, metatableFile in SortedPairs(file.Find(metatablesFolder .. "/cl_*.lua", "LUA"), true) do
+	for _, metatableFile in SortedPairs(file.Find(metatablesFolder .. "/cl_*.lua", "LUA")) do
 		local path = metatablesFolder .. "/" .. metatableFile
 		AddCSLuaFile(path)
 		MsgN("[LOADER] Client file added: " .. path)
@@ -250,13 +250,13 @@ function loader.addClientFiles()
 
 	local thirdpartyFolder = GM.FolderName .. "/gamemode/lib"
 
-	for _, thirdpartyFile in SortedPairs(file.Find(thirdpartyFolder .. "/sh_*.lua", "LUA"), true) do
+	for _, thirdpartyFile in SortedPairs(file.Find(thirdpartyFolder .. "/sh_*.lua", "LUA")) do
 		local path = thirdpartyFolder .. "/" .. thirdpartyFile
 		AddCSLuaFile(path)
 		MsgN("[LOADER] Client file added: " .. path)
 	end
 
-	for _, thirdpartyFile in SortedPairs(file.Find(thirdpartyFolder .. "/cl_*.lua", "LUA"), true) do
+	for _, thirdpartyFile in SortedPairs(file.Find(thirdpartyFolder .. "/cl_*.lua", "LUA")) do
 		local path = thirdpartyFolder .. "/" .. thirdpartyFile
 		AddCSLuaFile(path)
 		MsgN("[LOADER] Client file added: " .. path)
