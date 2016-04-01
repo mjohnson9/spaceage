@@ -14,7 +14,7 @@ if [ -z "${!DEPLOY_TO}" ]; then
 fi
 
 eval $(ssh-agent -s)
-ssh-add < (echo "$SSH_PRIVATE_KEY")
+ssh-add <(echo "${SSH_PRIVATE_KEY}")
 
 mkdir -p ~/.ssh
 chmod 0700 ~/.ssh
