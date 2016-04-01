@@ -218,6 +218,18 @@ end
 ---
 -- Adds all clientside files as resources
 function loader.addClientFiles()
+	-- Many addons fail to add themselves as resources. As such, we go through
+	-- and add all of our addons as resources for the client. This isn't very
+	-- efficient for the client's loading time, but it ensures that they won't
+	-- have content missing due to workshop addons.
+	for _, addon in ipairs(engine.GetAddons()) do
+		if addon.wsid ~= nil then
+			resource.AddWorkshop(addon.wsid)
+			MsgN("[LOADER] Add workshop addon for download: " .. addon.title)
+		end
+	end
+
+
 	-- this is the folder where all of our extensions are
 	local extensionFolder = GM.FolderName .. "/gamemode/extensions"
 
