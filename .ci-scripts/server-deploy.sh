@@ -13,13 +13,13 @@ if [ -z "${!DEPLOY_TO}" ]; then
 	exit 1
 fi
 
-#eval $(ssh-agent -s)
-#ssh-add < (echo "$SSH_PRIVATE_KEY")
+eval $(ssh-agent -s)
+ssh-add < (echo "$SSH_PRIVATE_KEY")
 
-#mkdir -p ~/.ssh
-#chmod 0700 ~/.ssh
+mkdir -p ~/.ssh
+chmod 0700 ~/.ssh
 
-#echo "${KNOWN_HOSTS}" > ~/.ssh/known_hosts
+echo "${KNOWN_HOSTS}" > ~/.ssh/known_hosts
 
 TEMP_DIR="$(mktemp -d --suffix .server-deploy)"
 function finish {
