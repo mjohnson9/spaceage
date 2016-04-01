@@ -21,19 +21,11 @@ chmod 0700 ~/.ssh
 
 echo "${KNOWN_HOSTS}" > ~/.ssh/known_hosts
 
-TEMP_DIR="$(mktemp -d --suffix .server-deploy)"
-function finish {
-	rm -rf "${TEMP_DIR}"
-}
-trap finish EXIT
-
-tar -x -C "${TEMP_DIR}" -f "server.tar"
-
 FAILED=0
 
 while read -r deploy_host; do
 	echo "Deploying to: ${deploy_host}"
-	rsync -a --delete "${TEMP_DIR}/" "${deploy_host}"
+	rsync -a --delete "server-content/" "${deploy_host}"
 	status=$?
 	if [ $status -ne 0 ]; then
 		FAILED=1
