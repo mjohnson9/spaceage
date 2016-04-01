@@ -4,4 +4,4 @@
 DeriveGamemode("sandbox")
 
 GM.Name = "SpaceAge"
-GM.VCSInfo = "$Id: cb6d4f682c4799aab60deb81f32f157f4d3a4d05 $"
+GM.VCSInfo = "$Id$"
