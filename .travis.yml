@@ -11,7 +11,7 @@ env:
   - LUA="luajit=2.0"
 
 before_install:
-  - BINDIR="$(mktemp --suffix .bindir)"
+  - BINDIR="$(mktemp -d --suffix .bindir)"
   - pip install hererocks
   - hererocks "${BINDIR}" -r^ --$LUA
   - mkdir -p "${BINDIR}/bin"
