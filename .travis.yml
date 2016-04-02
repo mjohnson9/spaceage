@@ -19,7 +19,7 @@ before_install:
 
 script:
   - .travis-ci/check-syntax.sh "$TRAVIS_BUILD_DIR"
-  - glualint --config .glualint.json "$TRAVIS_BUILD_DIR"
+  - .travis-ci/check-glualint.sh "$TRAVIS_BUILD_DIR"
 
 branches:
   except:
