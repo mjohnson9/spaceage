@@ -16,6 +16,8 @@ before_install:
   - hererocks "${BINDIR}" -r^ --$LUA
   - mkdir -p "${BINDIR}/bin"
   - .travis-ci/download-glualint.sh "${BINDIR}/bin"
+  - ls -la "${BINDIR}/bin"
+  - find -type f "${BINDIR}/bin"
   - export PATH=$PATH:${BINDIR}/bin # Add directory with all installed binaries to PATH
 
 script:
