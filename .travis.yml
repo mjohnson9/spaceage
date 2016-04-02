@@ -7,8 +7,8 @@ addons:
     - unzip
 
 env:
-  - LUA="luajit=2.0"
   - LUA="luajit=2.0.3"
+  - LUA="luajit=2.0"
 
 before_install:
   - pip install hererocks
