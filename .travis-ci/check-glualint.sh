@@ -1,12 +1,14 @@
 #!/bin/sh
 
+set -e
+
 if [ -z "$1" ]; then
 	CHECK_DIR="."
 else
 	CHECK_DIR="$1"
 fi
 
-OUT="$(.bin/glualint --config .glualint.json "${CHECK_DIR}")"
+OUT="$(glualint --config .glualint.json "${CHECK_DIR}")"
 
 echo -n "${OUT}"
 
