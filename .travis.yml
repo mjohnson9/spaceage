@@ -18,8 +18,8 @@ before_install:
   - export PATH=$PATH:$PWD/lua_install/bin:$PWD/.bin # Add directory with all installed binaries to PATH
 
 script:
-  - .travis-ci/check-syntax.sh
-  - glualint --config .glualint.json .
+  - .travis-ci/check-syntax.sh "$TRAVIS_BUILD_DIR"
+  - glualint --config .glualint.json "$TRAVIS_BUILD_DIR"
 
 branches:
   except:
