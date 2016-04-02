@@ -8,14 +8,13 @@ addons:
 
 env:
   - LUA="luajit=2.0"
+  - LUA="luajit=2.0.3"
 
 before_install:
   - pip install hererocks
   - hererocks lua_install -r^ --$LUA
-  - curl -o $PWD/lua_install/bin/glualint.zip -L https://github.com/FPtje/GLuaFixer/releases/download/1.6.5/glualint-Linux-1.6.5.zip
-  - unzip $PWD/lua_install/bin/glualint.zip
-  - rm $PWD/lua_install/bin/glualint.zip
-  - chmod a+x $PWD/lua_install/bin/glualint
+  - mkdir -p "$PWD/.bin"
+  - .travis-ci/download-glualint.sh "$PWD/.bin"
   - export PATH=$PATH:$PWD/lua_install/bin # Add directory with all installed binaries to PATH
 
 script:
