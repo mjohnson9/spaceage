@@ -15,7 +15,7 @@ before_install:
   - pip install hererocks
   - hererocks "${BINDIR}" -r^ --$LUA
   - mkdir -p "${BINDIR}/bin"
-  - .travis-ci/download-glualint.sh "${BINDIR}/bi"
+  - .travis-ci/download-glualint.sh "${BINDIR}/bin"
   - export PATH=$PATH:${BINDIR}/bin # Add directory with all installed binaries to PATH
 
 script:
