@@ -3,7 +3,7 @@
 RETURN_STATUS=0
 
 for filepath in $(find . -type f -iname '*.lua' -not -iwholename '*.git*'); do
-	luac5.1 -p -- "${filepath}"
+	luac -p -- "${filepath}"
 	status=$?
 	if [ $status -ne 0 ]; then
 		RETURN_STATUS=1
