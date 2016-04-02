@@ -5,21 +5,20 @@ addons:
   apt:
     packages:
     - unzip
-
-env:
-  - LUA="lua=5.1"
+    - lua5.1
 
 before_install:
   - BINDIR="$(mktemp -d --suffix .bindir)"
-  - pip install hererocks
-  - hererocks "${BINDIR}" -r^ --$LUA
   - mkdir -p "${BINDIR}/bin"
   - .travis-ci/download-glualint.sh "${BINDIR}/bin"
-  - export PATH=$PATH:${BINDIR}/bin # Add directory with all installed binaries to PATH
+  - export PATH=$PATH:${BINDIR}/bin
 
 script:
   - .travis-ci/check-syntax.sh "$TRAVIS_BUILD_DIR"
   - .travis-ci/check-glualint.sh "$TRAVIS_BUILD_DIR"
+
+after_script:
+  - rm -rf "${BINDIR}"
 
 branches:
   except:
