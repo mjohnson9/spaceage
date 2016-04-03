@@ -134,7 +134,7 @@ end
 
 local DefaultMixin = {
 	__tostring = function(self) return "instance of " .. tostring(self.class) end,
-	initialize = function(self, ...) end,
+	initialize = function() end,
 	isInstanceOf = function(self, aClass) return type(self) == "table" and type(self.class) == "table" and type(aClass) == "table" and (aClass == self.class or type(aClass.isSubclassOf) == "function" and self.class:isSubclassOf(aClass)) end,
 	static = {
 		allocate = function(self)
@@ -166,7 +166,7 @@ local DefaultMixin = {
 
 			return subclass
 		end,
-		subclassed = function(self, other) end,
+		subclassed = function() end,
 		isSubclassOf = function(self, other) return type(other) == "table" and type(self) == "table" and type(self.super) == "table" and (self.super == other or type(self.super.isSubclassOf) == "function" and self.super:isSubclassOf(other)) end,
 		include = function(self, ...)
 			assert(type(self) == "table", "Make sure you that you are using 'Class:include' instead of 'Class.include'")
@@ -189,7 +189,5 @@ end
 setmetatable(middleclass, {
 	__call = function(_, ...) return middleclass.class(...) end
 })
-
-test = "a"
 
 return middleclass
