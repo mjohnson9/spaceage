@@ -14,7 +14,6 @@ install:
   - luarocks install luacheck
 
 script:
-  - .travis-ci/check-syntax.sh "$TRAVIS_BUILD_DIR"
   - .travis-ci/luacheck.sh
 
 after_script:
