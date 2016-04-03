@@ -1,12 +1,14 @@
 language: python
 sudo: false
 
-addons:
-  apt:
-    packages:
-    - unzip
-    - lua5.1
-    - luarocks
+env:
+  - LUA="5.1"
+
+before_install:
+  - BINDIR="$(mktemp -d --suffix .bindir)"
+  - mkdir -p "${BINDIR}/bin"
+  - hererocks "${BINDIR}" -r^ --lua "$LUA"
+  - export PATH=$PATH:${BINDIR}/bin
 
 install:
   - luarocks install luacheck
