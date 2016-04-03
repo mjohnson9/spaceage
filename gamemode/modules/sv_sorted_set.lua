@@ -85,7 +85,7 @@ end
 -- Creates a new sorted set
 -- @param compareFunc a comparison function of the signature function(a, b) -- it should return true whenever a is less than b
 -- @return a sorted set
-function new(compareFunc, equalFunc)
+local function new(compareFunc, equalFunc)
 	if compareFunc == nil then
 		compareFunc = defaultCompare
 	end
@@ -102,3 +102,7 @@ function new(compareFunc, equalFunc)
 
 	return queue
 end
+
+return {
+	new = new
+}
