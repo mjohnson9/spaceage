@@ -14,3 +14,19 @@ function HOOKS:PostPlayerDeath(ply)
 	ply:SetOxygen(0)
 	ply:SetCoolant(0)
 end
+
+function HOOKS:PlayerExitedPlanet(ply)
+	if not ply:GetInSpace() then
+		-- player isn't in space
+		return
+	end
+
+	if ply:IsRestricted() then
+		-- this player is restricted
+		if ply:GetMoveType() == MOVETYPE_NOCLIP then
+			-- the player is currently noclipping
+			-- let's disable that
+			ply:SetMoveType(MOVETYPE_WALK)
+		end
+	end
+end

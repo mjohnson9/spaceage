@@ -13,13 +13,17 @@ end
 function PLAYER:EnteredPlanet(planet)
 	self.planets:insert(planet)
 
-	return self:ApplyPlanet(self.planets[#self.planets])
+	self:ApplyPlanet(self.planets[#self.planets])
+
+	hook.Run("PlayerEneteredPlanet", self)
 end
 
 function PLAYER:ExitedPlanet(planet)
 	self.planets:remove(planet)
 
-	return self:ApplyPlanet(self.planets[#self.planets])
+	self:ApplyPlanet(self.planets[#self.planets])
+
+	hook.Run("PlayerExitedPlanet", self)
 end
 
 -- if a player's gravity is set to 0, the engine converts it to 1
@@ -35,6 +39,7 @@ function PLAYER:ApplyPlanet(planet)
 
 	if planet == nil then
 		self:SetGravity(PLAYER_NOGRAVITY)
+		self:SetInSpace(true)
 		self:SetAreaName("Space")
 		return
 	end
@@ -46,5 +51,6 @@ function PLAYER:ApplyPlanet(planet)
 		self:SetGravity(gravity)
 	end
 
+	self:SetInSpace(false)
 	self:SetAreaName(planet:GetPlanetName())
 end

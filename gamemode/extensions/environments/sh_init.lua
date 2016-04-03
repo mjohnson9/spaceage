@@ -8,3 +8,21 @@ function HOOKS:SetupPlayerDatatables(ply)
 	ply:NetworkVar("Float", 1, "Oxygen")
 	ply:NetworkVar("Float", 2, "Coolant")
 end
+
+function HOOKS:PlayerNoClip(ply, desiredState)
+	if not desiredState then
+		-- player wants to leave noclip
+		-- we don't care about that
+		return
+	end
+
+	if not ply:GetInSpace() then
+		-- player isn't in space
+		-- we don't care about that either
+		return
+	end
+
+	-- if they're not restricted, allow them to noclip
+	-- otherwise, they can not noclip
+	return not ply:IsRestricted()
+end
