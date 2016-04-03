@@ -21,6 +21,9 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 ]]
+-- because we're overriding global variables, we have to tell luacheck to ignore that
+-- luacheck: ignore gui vgui
+
 --
 local origin = Vector(0, 0, 0)
 local angle = Vector(0, 0, 0)
@@ -33,9 +36,9 @@ local function getCursorPos()
 	-- if there wasn't an intersection, don't calculate anything.
 	if not p then return 0, 0 end
 	local offset = origin - p
-	local angle2 = angle:Angle()
+	--[[local angle2 = angle:Angle()
 	angle2:RotateAroundAxis(normal, 90)
-	angle2 = angle2:Forward()
+	angle2 = angle2:Forward()]]
 	local offsetp = Vector(offset.x, offset.y, offset.z)
 	offsetp:Rotate(-normal:Angle())
 	local x = -offsetp.y
@@ -227,9 +230,11 @@ function vgui.End3D2D()
 end
 
 -- Keep track of child controls
-if not vguiCreate then
-	vguiCreate = vgui.Create
+if not _G.vguiCreate then
+	_G.vguiCreate = vgui.Create
 end
+
+local vguiCreate = _G.vguiCreate
 
 function vgui.Create(class, parent)
 	local pnl = vguiCreate(class, parent)
