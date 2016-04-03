@@ -1,6 +1,6 @@
 module("planet_util")
 
-function compare(planet1, planet2)
+local function compare(planet1, planet2)
 	local priority1 = planet1:GetPlanetPriority()
 	local priority2 = planet2:GetPlanetPriority()
 	if priority1 ~= priority2 then
@@ -9,3 +9,7 @@ function compare(planet1, planet2)
 
 	return planet1:EntIndex() < planet2:EntIndex()
 end
+
+return {
+	compare = compare
+}

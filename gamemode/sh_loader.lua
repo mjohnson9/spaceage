@@ -1,7 +1,7 @@
 -- Copyright (C) Charles Leasure, Mark Dietzer, and Michael Johnson d.b.a SpaceAge - All Rights Reserved
 -- See LICENSE file for more information.
 
-loader = {}
+local loader = {}
 
 -- localize commonly used functions
 local include = include
@@ -33,6 +33,7 @@ do
 		end
 	end
 
+	-- luacheck: globals package
 	package.path = newPaths .. package.path
 end
 
@@ -104,6 +105,7 @@ end
 -- including it and applying changes to support it
 -- @param the path to the extension
 local function loadExtension(path)
+	-- luacheck: ignore HOOKS
 	HOOKS = {
 		_fileName = path
 	}
@@ -111,6 +113,7 @@ local function loadExtension(path)
 
 	include(path)
 
+	-- luacheck: ignore HOOKS
 	HOOKS = nil
 end
 
@@ -243,3 +246,5 @@ function loader.addClientFiles()
 	addCSLuaFiles(getLoadableFiles(GM.FolderName .. "/gamemode/metatables", "client"))
 	addCSLuaFiles(getLoadableFiles(GM.FolderName .. "/gamemode/lib", "client"))
 end
+
+return loader

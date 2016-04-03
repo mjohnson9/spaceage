@@ -5,7 +5,7 @@
 include("info.lua")
 
 -- Loader library
-include("sh_loader.lua")
+local loader = include("sh_loader.lua")
 
 -- Load client files
 loader.loadExtensions("client")
