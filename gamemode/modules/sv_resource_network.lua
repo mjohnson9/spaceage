@@ -4,7 +4,6 @@ local error = error
 local ipairs = ipairs
 local next = next
 local pairs = pairs
-local setmetatable = setmetatable
 local tableCount = table.Count
 local tableRemove = table.remove
 
