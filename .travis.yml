@@ -6,7 +6,7 @@ env:
 
 before_install:
   - BINDIR="$(mktemp -d --suffix .bindir)"
-  - mkdir -p "${BINDIR}/bin"
+  - pip install hererocks
   - hererocks "${BINDIR}" -r^ --lua "$LUA"
   - export PATH=$PATH:${BINDIR}/bin
 
