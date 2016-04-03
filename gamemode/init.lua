@@ -11,7 +11,7 @@ include("info.lua")
 AddCSLuaFile("sh_loader.lua")
 
 -- Loader library
-include("sh_loader.lua")
+local loader = include("sh_loader.lua")
 
 -- Add clientside Lua files as resources
 loader.addClientFiles()

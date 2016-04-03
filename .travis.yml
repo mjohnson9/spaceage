@@ -6,16 +6,14 @@ addons:
     packages:
     - unzip
     - lua5.1
+    - luarocks
 
-before_install:
-  - BINDIR="$(mktemp -d --suffix .bindir)"
-  - mkdir -p "${BINDIR}/bin"
-  - .travis-ci/download-glualint.sh "${BINDIR}/bin"
-  - export PATH=$PATH:${BINDIR}/bin
+install:
+  - luarocks install luacheck
 
 script:
   - .travis-ci/check-syntax.sh "$TRAVIS_BUILD_DIR"
-  - .travis-ci/check-glualint.sh "$TRAVIS_BUILD_DIR"
+  - .travis-ci/luacheck.sh
 
 after_script:
   - rm -rf "${BINDIR}"

@@ -22,7 +22,7 @@ local customPlanets = {
 	}
 }
 
-local function getPlanetV1(logicKV)
+local function getPlanetV1()
 	-- TODO: add support for version 1 planets
 	error("Version 1 planets are not yet supported")
 end

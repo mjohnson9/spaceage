@@ -3,18 +3,18 @@
 
 local oldRequire
 -- if this is a reload, use the original require function
-if replacementRequire and replacementRequire.oldRequire ~= nil then
-	oldRequire = replacementRequire.oldRequire
+if _G.replacementRequire and _G.replacementRequire.oldRequire ~= nil then
+	oldRequire = _G.replacementRequire.oldRequire
 end
 
 -- remove all of our own old loaders
-if replacementRequire and replacementRequire.ourLoaders ~= nil then
-	for _, v in pairs(replacementRequire.ourLoaders) do
+if _G.replacementRequire and _G.replacementRequire.ourLoaders ~= nil then
+	for _, v in pairs(_G.replacementRequire.ourLoaders) do
 		table.RemoveByValue(package.loaders, v)
 	end
 end
 
-replacementRequire = {
+_G.replacementRequire = {
 	ourLoaders = {}
 }
 
@@ -22,10 +22,11 @@ replacementRequire = {
 if oldRequire == nil then
 	oldRequire = require
 end
-replacementRequire.oldRequire = oldRequire
+_G.replacementRequire.oldRequire = oldRequire
 
 -- override require with a new version that follows most of the Lua
 -- specification
+-- luacheck: ignore require
 function require(name)
 	if package.loaded[name] ~= nil then
 		return package.loaded[name]
@@ -102,7 +103,7 @@ local function binaryModuleSearcher(name)
 	return "\n\tno file '" .. binPath .. "'"
 end
 
-replacementRequire.ourLoaders["binary"] = binaryModuleSearcher
+_G.replacementRequire.ourLoaders["binary"] = binaryModuleSearcher
 table.insert(package.loaders, binaryModuleSearcher)
 
 ----- PATH LOADING -----
@@ -110,10 +111,11 @@ table.insert(package.loaders, binaryModuleSearcher)
 local defaultPath = "includes/modules/?.lua"
 
 if package.path == nil then
+	-- luacheck: ignore package
 	package.path = defaultPath
 end
 
-local function pathLoader(name, path)
+local function pathLoader(_, path)
 	local ret = include(path)
 	if ret ~= nil then
 		return ret
@@ -141,5 +143,5 @@ local function pathSearcher(name)
 	return "\n\t" .. string.Implode("\n\t", reasons)
 end
 
-replacementRequire.ourLoaders["path"] = pathSearcher
+_G.replacementRequire.ourLoaders["path"] = pathSearcher
 table.insert(package.loaders, pathSearcher)
