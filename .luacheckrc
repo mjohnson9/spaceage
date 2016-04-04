@@ -19,7 +19,7 @@ files["gamemode"].std = "+gmod_gamemode"
 files["gamemode/init.lua"].std = "gmod_server+gmod_gamemode"
 files["gamemode/modules"].module = true
 files["gamemode/extensions/*/cl_*.lua"].std = "gmod_client+sa_extension"
-files["gamemode/extensions/*/sv_*.lua"].std = "gmod_client+sa_extension"
+files["gamemode/extensions/*/sv_*.lua"].std = "gmod_server+sa_extension"
 files["gamemode/extensions/*/sh_*.lua"].std = "gmod_server+gmod_client+sa_extension"
 
 files["entities/entities"].std = "+gmod_entity"
