@@ -1,22 +1,70 @@
 -- Copyright (C) Charles Leasure, Mark Dietzer, and Michael Johnson d.b.a SpaceAge - All Rights Reserved
 -- See LICENSE file for more information.
 
-local sa_colors = require("sa_colors")
+local sa_theme = require("sa_theme")
 
 -- This code was originally copied from the stock sandbox scoreboard.
 -- Thanks, garry!
 
-surface.CreateFont("ScoreboardDefault", {
-	font = "Helvetica",
-	size = 22,
-	weight = 800
-})
+local curAdminStats = {}
 
-surface.CreateFont("ScoreboardDefaultTitle", {
-	font = "Helvetica",
-	size = 32,
-	weight = 800
-})
+net.Receive("sa_adminstats", function()
+	curAdminStats.frameTime = net.ReadFloat()
+end)
+
+-- A single card in the server stats
+local STAT_ENTRY = {
+	Init = function(self)
+		self.title = vgui.Create("DLabel")
+	end,
+	Paint = function(self, w, h)
+		local c = sa_theme.divider.dark
+		surface.SetDrawColor(c.r, c.g, c.b, c.a)
+		surface.DrawRect(0, h - 1, w - 72, 1)
+	end
+}
+STAT_ENTRY = vgui.RegisterTable(STAT_ENTRY, "DPanel")
+
+local ADMIN_STATS = {
+	Init = function(self)
+		self.headerBox = self:Add("Panel")
+		self.headerBox:Dock(TOP)
+		self.headerBox:SetHeight(40 + (16 * 2))
+
+		self.title = self.headerBox:Add("DLabel")
+		self.title:SetFont(sa_theme.fonts.subheading)
+		self.title:SetTextColor(sa_theme.lightText.primary)
+		self.title:Dock(FILL)
+		self.title:SetHeight(40)
+		self.title:SetContentAlignment(5)
+		self.title:SetText("Server Stats")
+
+		self.stats = self:Add("DScrollPanel")
+		self.stats:Dock(FILL)
+	end,
+	PerformLayout = function(self)
+		self:SetSize(200, ScrH() - 200)
+	end,
+	Paint = function(self, w, h)
+		do
+			local c = sa_theme.background.mid
+
+			surface.SetDrawColor(c.r, c.g, c.b, c.a)
+			surface.DrawRect(0, 0, w, h)
+		end
+
+		do
+			local x, y = self.headerBox:GetPos()
+			local hW, hH = self.headerBox:GetSize()
+
+			local c = sa_theme.primary.light
+
+			surface.SetDrawColor(c.r, c.g, c.b, c.a)
+			surface.DrawRect(x, y, hW, hH)
+		end
+	end,
+}
+ADMIN_STATS = vgui.RegisterTable(ADMIN_STATS, "DPanel")
 
 -- This defines a circular avatar image
 -- It uses stencils to mask out the parts of the image not inside the circle
@@ -86,7 +134,6 @@ local CIRCLE_AVATAR = {
 		render.ClearStencil()
 	end
 }
-
 CIRCLE_AVATAR = vgui.RegisterTable(CIRCLE_AVATAR)
 
 --
@@ -102,21 +149,21 @@ local PLAYER_LINE = {
 
 		self.Name = self:Add("DLabel")
 		self.Name:Dock(FILL)
-		self.Name:SetFont("ScoreboardDefault")
-		self.Name:SetTextColor(sa_colors.darkText.secondary)
+		self.Name:SetFont(sa_theme.fonts.body2)
+		self.Name:SetTextColor(sa_theme.darkText.secondary)
 		self.Name:DockMargin(24, 0, 8, 0)
 
 		self.Mute = self:Add("DImageButton")
 		self.Mute:SetSize(32, 32)
-		self.Mute:SetColor(sa_colors.darkText.hint)
+		self.Mute:SetColor(sa_theme.darkText.hint)
 		self.Mute:Dock(RIGHT)
 		self.Mute:DockMargin(8, 0, 8, 0)
 
 		self.Ping = self:Add("DLabel")
 		self.Ping:Dock(RIGHT)
 		self.Ping:SetWidth(50)
-		self.Ping:SetFont("ScoreboardDefault")
-		self.Ping:SetTextColor(sa_colors.darkText.hint)
+		self.Ping:SetFont(sa_theme.fonts.body1)
+		self.Ping:SetTextColor(sa_theme.darkText.hint)
 		self.Ping:SetContentAlignment(5)
 		self.Ping:DockMargin(8, 0, 8, 0)
 
@@ -130,8 +177,6 @@ local PLAYER_LINE = {
 		self.Avatar:SetPlayer(pl, 32)
 		self:Think(self)
 	end,
-	--local friend = self.Player:GetFriendStatus()
-	--MsgN( pl, " Friend: ", friend )
 	Think = function(self)
 		if not IsValid(self.Player) then
 			self:SetZPos(9999) -- Causes a rebuild
@@ -168,9 +213,9 @@ local PLAYER_LINE = {
 		end
 	end,
 	Paint = function(self, w, h)
-		local c = sa_colors.divider.dark
+		local c = sa_theme.divider.dark
 		surface.SetDrawColor(c.r, c.g, c.b, c.a)
-		surface.DrawRect(72, 47, w - 72, 1)
+		surface.DrawRect(72, h - 1, w - 72, 1)
 	end
 }
 
@@ -196,27 +241,38 @@ local SCORE_BOARD = {
 		self.Header:SetHeight(40 + (16 * 2))
 
 		self.Name = self.Header:Add("DLabel")
-		self.Name:SetFont("ScoreboardDefaultTitle")
-		self.Name:SetTextColor(sa_colors.lightText.primary)
+		self.Name:SetFont(sa_theme.fonts.title)
+		self.Name:SetTextColor(sa_theme.lightText.primary)
 		self.Name:Dock(FILL)
 		self.Name:SetHeight(40)
 		self.Name:SetContentAlignment(5)
 
 		self.Scores = self:Add("DScrollPanel")
 		self.Scores:Dock(FILL)
+
+		self.adminStats = vgui.CreateFromTable(ADMIN_STATS, self)
+		self.adminStats:Dock(LEFT)
 	end,
 	PerformLayout = function(self)
 		self:SetSize(700, ScrH() - 200)
 		self:SetPos(ScrW() / 2 - 350, 100)
 	end,
 	Paint = function(self, w, h)
-		draw.RoundedBox(4, 0, 0, w, h, sa_colors.background.light) -- main background
+		do
+			local c = sa_theme.background.light
+
+			surface.SetDrawColor(c.r, c.g, c.b, c.a)
+			surface.DrawRect(0, 0, w, h)
+		end
 
 		do
-			-- in a separate scope to keep from cluttering the function scope
 			local x, y = self.Header:GetPos()
 			local hW, hH = self.Header:GetSize()
-			draw.RoundedBox(4, x, y, hW, hH, sa_colors.primary.mid)
+
+			local c = sa_theme.primary.mid
+
+			surface.SetDrawColor(c.r, c.g, c.b, c.a)
+			surface.DrawRect(x, y, hW, hH)
 		end
 	end,
 	Think = function(self, w, h)

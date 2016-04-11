@@ -3,7 +3,52 @@
 
 -- based on the material design guidelines at https://www.google.com/design/spec/style/color.html
 
+surface.CreateFont("MaterialTitle", {
+	font = "Roboto",
+	size = 20,
+	weight = 500
+})
+
+surface.CreateFont("MaterialSubheading", {
+	font = "Roboto",
+	size = 15,
+	weight = 400
+})
+
+surface.CreateFont("MaterialBody2", {
+	font = "Roboto",
+	size = 13,
+	weight = 500
+})
+
+surface.CreateFont("MaterialBody1", {
+	font = "Roboto",
+	size = 13,
+	weight = 400
+})
+
+surface.CreateFont("MaterialCaption", {
+	font = "Roboto",
+	size = 12,
+	weight = 400
+})
+
+surface.CreateFont("MaterialButton", {
+	font = "Roboto",
+	size = 14,
+	weight = 500
+})
+
 return {
+	fonts = {
+		title = "MaterialTitle",
+		subheading = "MaterialSubheading",
+		body2 = "MaterialBody2",
+		body1 = "MaterialBody1",
+		caption = "MaterialCaption",
+		button = "MaterialButton"
+	},
+
 	primary = { -- indigo
 		mid = Color(63, 81, 181),
 		light = Color(197, 202, 233),
