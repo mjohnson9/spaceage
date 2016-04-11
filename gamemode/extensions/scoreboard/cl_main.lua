@@ -168,9 +168,9 @@ local PLAYER_LINE = {
 			self.Muted = self.Player:IsMuted()
 
 			if self.Muted then
-				self.Mute:SetImage("icon32/muted.png")
+				self.Mute:SetImage("spaceage/scoreboard/muted.png")
 			else
-				self.Mute:SetImage("icon32/unmuted.png")
+				self.Mute:SetImage("spaceage/scoreboard/unmuted.png")
 			end
 
 			self.Mute.DoClick = function()
