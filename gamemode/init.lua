@@ -1,21 +1,20 @@
--- clientside resource includes
-include("sv_resources.lua")
+-- Copyright (C) Charles Leasure, Mark Dietzer, and Michael Johnson d.b.a SpaceAge - All Rights Reserved
+-- See LICENSE file for more information.
 
--- metatable includes
-include("metatables/player_sv.lua")
+-- Add the basic gamemode information as a resource
+AddCSLuaFile("info.lua")
 
--- shared include
-include("shared.lua")
+-- Basic gamemode information
+include("info.lua")
 
--- misc includes
-include("sv_planets.lua")
+-- Add the loader library as a resource
+AddCSLuaFile("sh_loader.lua")
 
-function GM:InitPostEntity()
-	self:CreatePlanets()
-end
+-- Loader library
+local loader = include("sh_loader.lua")
 
-function GM:PlayerSpawn(ply)
-	self.BaseClass.PlayerSpawn(self, ply)
+-- Add clientside Lua files as resources
+loader.addClientFiles()
 
-	player_manager.SetPlayerClass(ply, "player_spaceage")
-end
+-- Load client files
+loader.loadExtensions("server")

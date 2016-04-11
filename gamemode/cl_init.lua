@@ -1,26 +1,11 @@
--- metatable includes
-include("metatables/player_cl.lua")
+-- Copyright (C) Charles Leasure, Mark Dietzer, and Michael Johnson d.b.a SpaceAge - All Rights Reserved
+-- See LICENSE file for more information.
 
--- shared include
-include("shared.lua")
+-- Basic gamemode information
+include("info.lua")
 
--- misc includes
-include("cl_hud.lua")
+-- Loader library
+local loader = include("sh_loader.lua")
 
-function GM:Initialize()
-	self.BaseClass.Initialize(self)
-end
-
-function GM:InitPostEntity()
-	self.BaseClass.InitPostEntity(self)
-
-	self.LocalPlayer = LocalPlayer()
-end
-
-function GM:OnEntityCreated(ent)
-	self.BaseClass.OnEntityCreated(ent)
-
-	if not ent:IsPlayer() then
-		return
-	end
-end
+-- Load client files
+loader.loadExtensions("client")

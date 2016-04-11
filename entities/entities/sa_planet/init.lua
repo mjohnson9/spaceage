@@ -1,21 +1,49 @@
+-- Copyright (C) Charles Leasure, Mark Dietzer, and Michael Johnson d.b.a SpaceAge - All Rights Reserved
+-- See LICENSE file for more information.
+
 include("info.lua")
 
 function ENT:Initialize()
 	self.BaseClass.Initialize(self)
 
-	self:SetSolid(SOLID_BBOX)
-	self:SetCollisionBounds(Vector(0, 0, 0), Vector(0, 0, 0))
-	self:SetTrigger(true)
+	local radius = self.planetInfo.radius
+	local negRadius = -radius
 
+	local mins = Vector(negRadius, negRadius, negRadius)
+	local maxs = Vector(radius, radius, radius)
+	if self.planetInfo.cube then
+		self:PhysicsInitBox(mins, maxs)
+	else
+		-- TODO: I'm not actually sure if this is working or not. It needs more
+		-- research.
+
+		self:PhysicsInitSphere(radius, "default_silent")
+		--MsgN("Spherical planets are presently represented by cubes due to limitations in Garry's Mod.")
+	end
+
+	self:SetCollisionBounds(mins, maxs)
+
+	self:SetMoveType(MOVETYPE_NONE) -- planets should never move
+
+	self:SetTrigger(true)
+end
+
+function ENT:CheckPlanetInfo()
 	if self.planetInfo == nil then
-		self.planetInfo = {}
+		self.planetInfo = {
+			name = "",
+
+			cube = false,
+
+			gravity = 1,
+			priority = 1,
+			radius = 1,
+		}
 	end
 end
 
 function ENT:SetPlanetName(name)
-	if self.planetInfo == nil then
-		self.planetInfo = {}
-	end
+	self:CheckPlanetInfo()
 	self.planetInfo.name = name
 end
 
@@ -23,14 +51,24 @@ function ENT:GetPlanetName()
 	return self.planetInfo.name
 end
 
-function ENT:SetPlanetRadius(radius)
-	if self.planetInfo == nil then
-		self.planetInfo = {}
+function ENT:SetPlanetShape(shape)
+	self:CheckPlanetInfo()
+
+	if shape == "sphere" then
+		self.planetInfo.cube = false
+	elseif shape == "cube" then
+		self.planetInfo.cube = true
+	else
+		error("unknown planet shape: " .. tostring(shape))
 	end
+end
+
+function ENT:SetPlanetRadius(radius)
+	self:CheckPlanetInfo()
 	self.planetInfo.radius = radius
 
-	local negRadius = -radius
-	self:SetCollisionBounds(Vector(negRadius, negRadius, negRadius), Vector(radius, radius, radius))
+	--local negRadius = -radius
+	--self:SetCollisionBounds(Vector(negRadius, negRadius, negRadius), Vector(radius, radius, radius))
 end
 
 function ENT:GetPlanetRadius()
@@ -38,9 +76,7 @@ function ENT:GetPlanetRadius()
 end
 
 function ENT:SetPlanetGravity(gravity)
-	if self.planetInfo == nil then
-		self.planetInfo = {}
-	end
+	self:CheckPlanetInfo()
 	self.planetInfo.gravity = gravity
 end
 
@@ -48,22 +84,33 @@ function ENT:GetPlanetGravity()
 	return self.planetInfo.gravity
 end
 
+function ENT:SetPlanetPriority(priority)
+	self:CheckPlanetInfo()
+	self.planetInfo.priority = priority
+end
+
+function ENT:GetPlanetPriority()
+	return self.planetInfo.priority
+end
+
 function ENT:StartTouch(otherEnt)
-	if not otherEnt:IsPlayer() then
-		return
-	end
-
-	print(otherEnt:GetName() .. " has entered the atmosphere of " .. self.planetInfo.name)
-
 	otherEnt:EnteredPlanet(self)
 end
 
 function ENT:EndTouch(otherEnt)
-	if not otherEnt:IsPlayer() then
-		return
-	end
-
-	print(otherEnt:GetName() .. " has exited the atmosphere of " .. self.planetInfo.name)
-
 	otherEnt:ExitedPlanet(self)
+end
+
+-- Prevent player interaction
+
+function ENT:CanTool()
+	return false
+end
+
+function ENT:GravGunPunt()
+	return false
+end
+
+function ENT:GravGunPickupAllowed()
+	return false
 end

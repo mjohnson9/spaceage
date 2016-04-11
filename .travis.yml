@@ -1,0 +1,36 @@
+language: python
+sudo: false
+
+addons:
+  apt:
+    packages:
+      - unzip
+
+env:
+  - LUA="5.1"
+
+before_install:
+  - BINDIR="$(mktemp -d --suffix .bindir)"
+  - pip install hererocks
+  - hererocks "${BINDIR}" -r^ --lua "$LUA"
+  - .travis-ci/download-glualint.sh "${BINDIR}/bin"
+  - export PATH=$PATH:${BINDIR}/bin
+
+install:
+  - luarocks install luacheck
+
+script:
+  - .travis-ci/luacheck.sh
+  - .travis-ci/glualint.sh
+
+after_script:
+  - rm -rf "${BINDIR}"
+
+branches:
+  except:
+    - gh-pages
+
+notifications:
+  email:
+    on_success: change
+    on_failure: always
