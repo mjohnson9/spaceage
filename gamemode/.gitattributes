@@ -1,2 +1,0 @@
-# Substitute Git information in info.lua with correct information on export
-info.lua export-subst
