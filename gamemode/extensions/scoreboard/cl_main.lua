@@ -96,20 +96,9 @@ CIRCLE_AVATAR = vgui.RegisterTable(CIRCLE_AVATAR)
 --
 local PLAYER_LINE = {
 	Init = function(self)
-		--[[self.AvatarButton = self:Add("DButton")
-		self.AvatarButton:Dock(LEFT)
-		self.AvatarButton:SetSize(32, 32)
-
-		self.AvatarButton.DoClick = function()
-			self.Player:ShowProfile()
-		end]]
-
 		self.Avatar = vgui.CreateFromTable(CIRCLE_AVATAR, self)
 		self.Avatar:Dock(LEFT)
 		self.Avatar:SetSize(32, 32)
-		self.Avatar.DoClick = function()
-
-	end
 
 		self.Name = self:Add("DLabel")
 		self.Name:Dock(FILL)
@@ -204,20 +193,15 @@ local SCORE_BOARD = {
 	Init = function(self)
 		self.Header = self:Add("Panel")
 		self.Header:Dock(TOP)
+		self.Header:SetHeight(40 + (16 * 2))
+
 		self.Name = self.Header:Add("DLabel")
 		self.Name:SetFont("ScoreboardDefaultTitle")
 		self.Name:SetTextColor(sa_colors.lightText.primary)
 		self.Name:Dock(FILL)
 		self.Name:SetHeight(40)
 		self.Name:SetContentAlignment(5)
-		self.Header:SetHeight(40 + (16 * 2))
-		--self.Name:SetExpensiveShadow(2, Color(0, 0, 0, 200))
-		--self.NumPlayers = self.Header:Add( "DLabel" )
-		--self.NumPlayers:SetFont( "ScoreboardDefault" )
-		--self.NumPlayers:SetTextColor( Color( 255, 255, 255, 255 ) )
-		--self.NumPlayers:SetPos( 0, 100 - 30 )
-		--self.NumPlayers:SetSize( 300, 30 )
-		--self.NumPlayers:SetContentAlignment( 4 )
+
 		self.Scores = self:Add("DScrollPanel")
 		self.Scores:Dock(FILL)
 	end,
@@ -227,6 +211,7 @@ local SCORE_BOARD = {
 	end,
 	Paint = function(self, w, h)
 		draw.RoundedBox(4, 0, 0, w, h, sa_colors.background.light) -- main background
+
 		do
 			-- in a separate scope to keep from cluttering the function scope
 			local x, y = self.Header:GetPos()
@@ -234,21 +219,21 @@ local SCORE_BOARD = {
 			draw.RoundedBox(4, x, y, hW, hH, sa_colors.primary.mid)
 		end
 	end,
-	--draw.RoundedBox( 4, 0, 0, w, h, Color( 0, 0, 0, 200 ) )
 	Think = function(self, w, h)
 		self.Name:SetText(GetHostName())
-		--
-		-- Loop through each player, and if one doesn't have a score entry - create it.
-		--
+
 		local plyrs = player.GetAll()
 		table.sort(plyrs, playerScoreboardSort)
 
-		for k, pl in pairs(plyrs) do
+		for k, pl in pairs(plyrs) do -- loop through each player
 			if not IsValid(pl.ScoreEntry) then
+				-- if the player doesn't have a scoreboard entry, create one
 				pl.ScoreEntry = vgui.CreateFromTable(PLAYER_LINE, pl.ScoreEntry)
 				pl.ScoreEntry:Setup(pl)
 				self.Scores:AddItem(pl.ScoreEntry)
 			end
+
+			-- set the player's scoreboard entry to be in the correct position
 			pl.ScoreEntry:SetZPos(k)
 		end
 	end
