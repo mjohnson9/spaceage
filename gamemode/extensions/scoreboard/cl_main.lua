@@ -29,15 +29,16 @@ local ADMIN_STATS = {
 	Init = function(self)
 		self.headerBox = self:Add("Panel")
 		self.headerBox:Dock(TOP)
-		self.headerBox:SetHeight(40 + (16 * 2))
 
 		self.title = self.headerBox:Add("DLabel")
-		self.title:SetFont(sa_theme.fonts.subheading)
+		self.title:SetFont(sa_theme.fonts.title)
 		self.title:SetTextColor(sa_theme.lightText.primary)
 		self.title:Dock(FILL)
-		self.title:SetHeight(40)
 		self.title:SetContentAlignment(5)
 		self.title:SetText("Server Stats")
+		self.title:SizeToContents()
+
+		self.headerBox:SetHeight(self.title:GetTall() + (16 * 2))
 
 		self.stats = self:Add("DScrollPanel")
 		self.stats:Dock(FILL)
@@ -149,7 +150,7 @@ local PLAYER_LINE = {
 
 		self.Name = self:Add("DLabel")
 		self.Name:Dock(FILL)
-		self.Name:SetFont(sa_theme.fonts.body2)
+		self.Name:SetFont(sa_theme.fonts.subheading)
 		self.Name:SetTextColor(sa_theme.darkText.secondary)
 		self.Name:DockMargin(24, 0, 8, 0)
 
@@ -171,6 +172,8 @@ local PLAYER_LINE = {
 		self:DockPadding(16, 8, 16, 8)
 		self:SetHeight(48)
 		self:DockMargin(0, 0, 0, 0)
+
+		self:Think()
 	end,
 	Setup = function(self, pl)
 		self.Player = pl
@@ -188,11 +191,13 @@ local PLAYER_LINE = {
 		if self.PName == nil or self.PName ~= self.Player:Nick() then
 			self.PName = self.Player:Nick()
 			self.Name:SetText(self.PName)
+			self.Name:SizeToContents()
 		end
 
 		if self.NumPing == nil or self.NumPing ~= self.Player:Ping() then
 			self.NumPing = self.Player:Ping()
 			self.Ping:SetText(self.NumPing .. "ms")
+			self.Ping:SizeToContents()
 		end
 
 		--
@@ -238,13 +243,11 @@ local SCORE_BOARD = {
 	Init = function(self)
 		self.Header = self:Add("Panel")
 		self.Header:Dock(TOP)
-		self.Header:SetHeight(40 + (16 * 2))
 
 		self.Name = self.Header:Add("DLabel")
-		self.Name:SetFont(sa_theme.fonts.title)
+		self.Name:SetFont(sa_theme.fonts.display2)
 		self.Name:SetTextColor(sa_theme.lightText.primary)
 		self.Name:Dock(FILL)
-		self.Name:SetHeight(40)
 		self.Name:SetContentAlignment(5)
 
 		self.Scores = self:Add("DScrollPanel")
@@ -252,6 +255,8 @@ local SCORE_BOARD = {
 
 		self.adminStats = vgui.CreateFromTable(ADMIN_STATS, self)
 		self.adminStats:Dock(LEFT)
+
+		self:Think()
 	end,
 	PerformLayout = function(self)
 		self:SetSize(700, ScrH() - 200)
@@ -275,8 +280,14 @@ local SCORE_BOARD = {
 			surface.DrawRect(x, y, hW, hH)
 		end
 	end,
-	Think = function(self, w, h)
-		self.Name:SetText(GetHostName())
+	Think = function(self)
+		local curServerName = GetHostName()
+		if self.serverName == nil or self.serverName ~= curServerName then
+			self.serverName = curServerName
+			self.Name:SetText(self.serverName)
+			self.Name:SizeToContents()
+			self.Header:SetHeight(self.Name:GetTall() + (16 * 2))
+		end
 
 		local plyrs = player.GetAll()
 		table.sort(plyrs, playerScoreboardSort)

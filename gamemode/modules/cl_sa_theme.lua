@@ -3,6 +3,30 @@
 
 -- based on the material design guidelines at https://www.google.com/design/spec/style/color.html
 
+surface.CreateFont("MaterialDisplay3", {
+	font = "Roboto",
+	size = 56,
+	weight = 400
+})
+
+surface.CreateFont("MaterialDisplay2", {
+	font = "Roboto",
+	size = 45,
+	weight = 400
+})
+
+surface.CreateFont("MaterialDisplay1", {
+	font = "Roboto",
+	size = 34,
+	weight = 400
+})
+
+surface.CreateFont("MaterialHeadline", {
+	font = "Roboto",
+	size = 24,
+	weight = 400
+})
+
 surface.CreateFont("MaterialTitle", {
 	font = "Roboto",
 	size = 20,
@@ -41,6 +65,10 @@ surface.CreateFont("MaterialButton", {
 
 return {
 	fonts = {
+		display3 = "MaterialDisplay3",
+		display2 = "MaterialDisplay2",
+		display1 = "MaterialDisplay1",
+		headline = "MaterialHeadline",
 		title = "MaterialTitle",
 		subheading = "MaterialSubheading",
 		body2 = "MaterialBody2",
