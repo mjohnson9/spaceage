@@ -35,19 +35,19 @@ surface.CreateFont("MaterialTitle", {
 
 surface.CreateFont("MaterialSubheading", {
 	font = "Roboto",
-	size = 15,
+	size = 16,
 	weight = 400
 })
 
 surface.CreateFont("MaterialBody2", {
 	font = "Roboto",
-	size = 13,
+	size = 14,
 	weight = 500
 })
 
 surface.CreateFont("MaterialBody1", {
 	font = "Roboto",
-	size = 13,
+	size = 14,
 	weight = 400
 })
 
