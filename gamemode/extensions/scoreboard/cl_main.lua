@@ -172,8 +172,6 @@ local PLAYER_LINE = {
 		self:DockPadding(16, 8, 16, 8)
 		self:SetHeight(48)
 		self:DockMargin(0, 0, 0, 0)
-
-		self:Think()
 	end,
 	Setup = function(self, pl)
 		self.Player = pl
@@ -235,6 +233,10 @@ local function playerScoreboardSort(a, b)
 	return aName < bName
 end
 
+local function localPlayerCanViewAdminStats()
+	return LocalPlayer():query("sa serverstats")
+end
+
 --
 -- Here we define a new panel table for the scoreboard. It basically consists
 -- of a header and a scrollpanel - into which the player lines are placed.
@@ -255,12 +257,24 @@ local SCORE_BOARD = {
 
 		self.adminStats = vgui.CreateFromTable(ADMIN_STATS, self)
 		self.adminStats:Dock(LEFT)
-
-		self:Think()
+		if not localPlayerCanViewAdminStats() then
+			-- the local player isn't allowed to view admin stats; hide them
+			self.adminStats:Hide()
+		end
+	end,
+	HideAdminStats = function(self)
+		self.adminStats:Hide()
+	end,
+	ShowAdminStats = function(self)
+		self.adminStats:Show()
 	end,
 	PerformLayout = function(self)
-		self:SetSize(700, ScrH() - 200)
-		self:SetPos(ScrW() / 2 - 350, 100)
+		local extraWidth = 0
+		if self.adminStats:IsVisible() then
+			extraWidth = self.adminStats:GetWide()
+		end
+		self:SetSize(700 + extraWidth, ScrH() - 200)
+		self:Center()
 	end,
 	Paint = function(self, w, h)
 		do
@@ -345,3 +359,15 @@ function HOOKS:ScoreboardHide()
 
 	return true -- return to prevent calling sandbox's scoreboard
 end
+
+local function uclChanged()
+	print("UCL changed")
+	if not IsValid(scoreboardPanel) then return end -- the panel hasn't been created; no need to update
+
+	if localPlayerCanViewAdminStats() then
+		scoreboardPanel:ShowAdminStats()
+	else
+		scoreboardPanel:HideAdminStats()
+	end
+end
+hook.Add("UCLChanged", "sa_scoreboard", uclChanged) -- we can't use HOOKS because ULib won't call the gamemode hook table

@@ -14,19 +14,11 @@ do
 	end
 end
 
-local playerCanReceiveAdminStats
-do
-	if ULib then
-		ULib.ucl.registerAccess("sa adminstats", "admin", "Grants access to see server statistics in the scoreboard")
-		playerCanReceiveAdminStats = function(ply)
-			return ply:query("sa adminstats")
-		end
-	else
-		playerCanReceiveAdminStats = function(ply)
-			return ply:IsAdmin()
-		end
-	end
+-- function to check if a user has access to receive admin stats
+local function playerCanReceiveAdminStats(ply)
+	return ply:query("sa serverstats")
 end
+ULib.ucl.registerAccess("sa serverstats", ULib.ACCESS_ADMIN, "Grants access to see server statistics in the scoreboard", "Diagnostics")
 
 -- gets all of the players eligible to receive admin stats
 local function getPlayersForAdminStats()
